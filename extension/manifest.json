@@ -1,13 +1,13 @@
 {
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "Rug Reclaim"
+    "default_title": "Sol Burn"
   },
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
-  "description": "One-click recovery of SOL locked in dead token accounts. Read-only scan first \u2014 you see the number before signing anything.",
+  "description": "One-click recovery of SOL locked in dead token accounts. Read-only scan first: you see the number before signing anything.",
   "host_permissions": [
     "https://api.mainnet-beta.solana.com/",
     "https://rug-reclaim-api.chideraezeudu2.workers.dev/",
@@ -15,7 +15,7 @@
   ],
   "manifest_version": 3,
   "minimum_chrome_version": "116",
-  "name": "Rug Reclaim",
+  "name": "Sol Burn",
   "permissions": [
     "storage",
     "alarms",
@@ -26,5 +26,10 @@
     "matches": [
       "https://rug-reclaim-api.chideraezeudu2.workers.dev/*"
     ]
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   }
 }
