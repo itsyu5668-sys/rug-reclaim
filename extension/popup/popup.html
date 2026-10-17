@@ -5,50 +5,198 @@
 <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
-  <header>
-    <div class="brand">RUG RECLAIM</div>
-    <div class="tagline">dead accounts → your SOL back</div>
-  </header>
+<div id="app">
 
-  <section id="setup">
-    <label for="addr">Wallet address <span class="hint">(read-only scan — no connection needed)</span></label>
-    <div class="row">
+  <!-- ============ SCREEN 1 · first run / scan ============ -->
+  <section id="view-scan" class="view">
+    <div class="topbar">
+      <span class="netpill"><span class="dot"></span>SOLANA MAINNET</span>
+    </div>
+    <div class="hero-center">
+      <div class="logo-ring"><span class="logo-flame"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></div>
+      <h1 class="app-title">Sol Burn</h1>
+      <p class="app-tag">Find the SOL trapped in your dead token accounts.</p>
+    </div>
+    <div class="scan-box">
+      <label for="addr">Wallet address</label>
       <input id="addr" type="text" placeholder="paste a Solana address" autocomplete="off" spellcheck="false" />
-      <button id="scanBtn" class="primary">Scan</button>
+      <div id="addrError" class="error hidden"></div>
+      <button id="scanBtn" class="btn-primary btn-block">Scan my wallet</button>
+      <p class="micro">Read-only. No wallet connection, no signature — you see the number first.</p>
     </div>
-    <div id="addrError" class="error hidden"></div>
+    <div class="foot-strip">
+      <span>Non-custodial · open source · you approve every transaction</span>
+    </div>
   </section>
 
-  <section id="loading" class="hidden">
-    <div class="spinner"></div>
-    <div>scanning token accounts…</div>
+  <!-- ============ SCREEN 2 · scanning ============ -->
+  <section id="view-loading" class="view hidden">
+    <div class="topbar">
+      <span class="netpill"><span class="dot"></span>SOLANA MAINNET</span>
+    </div>
+    <div class="hero-center">
+      <div class="spinner-lg"></div>
+      <h2 class="h2">Scanning your token accounts…</h2>
+      <p class="muted">Checking every token account for trapped rent.</p>
+    </div>
   </section>
 
-  <section id="results" class="hidden">
-    <div class="bignum"><span id="totalSol">0</span><span class="unit">SOL</span></div>
-    <div class="sub">trapped across <span id="acctCount">0</span> accounts</div>
-
-    <div class="breakdown">
-      <div class="line"><span>dead accounts</span><b id="deadSol">0 SOL</b></div>
-      <div class="line"><span>excess rent on live accounts</span><b id="surplusSol">0 SOL</b></div>
+  <!-- ============ SCREEN 3 · results / money screen ============ -->
+  <section id="view-results" class="view hidden">
+    <div class="topbar">
+      <div class="brand">
+        <span class="brand-mark"><span class="logo-flame sm"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></span>
+        <span class="brand-name">Sol Burn</span>
+        <span class="brand-ver">v1.2</span>
+      </div>
+      <button id="settingsBtn" class="icon-btn" aria-label="Settings"><span class="ic-gear"></span></button>
     </div>
 
-    <div id="feePreview" class="feeline hidden"></div>
-
-    <div id="refRow" class="hidden">
-      <label for="referrer" class="hint">referred by a friend? paste their wallet (optional)</label>
-      <input id="referrer" type="text" placeholder="referrer's Solana address" autocomplete="off" spellcheck="false" />
+    <div class="money-hero">
+      <span class="pill"><span class="dot"></span>RECOVERABLE RENT BALANCE</span>
+      <div class="bignum"><span id="totalSol">0</span><span class="unit">SOL</span></div>
+      <p class="trapped-line">trapped across <span id="acctCount">0</span> accounts · <span id="usdEst" class="usd"></span></p>
     </div>
 
-    <button id="reclaimBtn" class="primary big" disabled>Reclaim</button>
-    <div id="progress" class="meta hidden"></div>
-    <div id="scannedAt" class="meta"></div>
+    <div class="card">
+      <div class="krow">
+        <span class="krow-left"><span class="krow-ic"><span class="ic-folder"></span></span><span id="deadLabel">Dead accounts</span></span>
+        <b id="deadSol">0 SOL</b>
+      </div>
+      <div class="kdiv"></div>
+      <div class="krow">
+        <span class="krow-left"><span class="krow-ic"><span class="ic-coin"></span></span><span id="surplusLabel">Excess rent on live</span></span>
+        <b id="surplusSol">0 SOL</b>
+      </div>
+    </div>
+
+    <div id="feeBanner" class="fee-banner hidden"></div>
+
+    <div class="ref-wrap">
+      <button id="refToggle" class="ref-toggle">Referred by a friend? Enter code <span class="chev">⌄</span></button>
+      <div id="refBox" class="ref-box hidden">
+        <input id="referrer" type="text" placeholder="friend's wallet address" autocomplete="off" spellcheck="false" />
+      </div>
+    </div>
+
+    <div class="cta-zone">
+      <button id="reclaimBtn" class="btn-primary btn-block btn-lg" disabled><span id="reclaimLabel">Reclaim</span><span class="arr">→</span></button>
+      <p class="meta"><span class="dot dim"></span><span id="scannedAt"></span></p>
+    </div>
+
+    <div class="foot-strip">
+      <span>Non-custodial · open source · you approve every transaction</span>
+    </div>
   </section>
 
-  <footer>
-    <span><span class="lock">◈</span> non-custodial · open source · you approve every transaction</span>
-  </footer>
+  <!-- ============ SCREEN 4 · claiming ============ -->
+  <section id="view-claiming" class="view hidden">
+    <div class="topbar">
+      <div class="brand">
+        <span class="brand-mark"><span class="logo-flame sm"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></span>
+        <div class="brand-stack"><span class="brand-name">SolBurn</span><span class="brand-sub">Rent Recovery</span></div>
+      </div>
+      <span class="pill pill-live"><span class="dot"></span>Signer Tab Active</span>
+    </div>
 
+    <div class="card card-pad">
+      <h2 class="h2">Signer tab opened — approve the transactions in Phantom.</h2>
+      <p class="muted">Check your browser window or extension bar.</p>
+      <p class="note-box">We bundle instructions to reclaim empty token addresses safely, without draining live balances.</p>
+    </div>
+
+    <div class="pipe-head"><span>TRANSACTION PIPELINE</span><span id="pipeStep" class="pipe-step"></span></div>
+    <div id="pipeRows" class="pipe-rows"></div>
+  </section>
+
+  <!-- ============ SCREEN 5 · claim complete ============ -->
+  <section id="view-done" class="view hidden">
+    <div class="topbar">
+      <div class="brand">
+        <span class="brand-mark"><span class="logo-flame sm"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></span>
+        <span class="brand-name">Sol Burn</span>
+      </div>
+    </div>
+    <div class="hero-center">
+      <div class="check-ring"><span class="ic-check-lg"></span></div>
+      <h2 class="h2">Done — SOL is back in your wallet.</h2>
+      <p class="muted">We'll keep watching. New dead accounts will show up on the badge.</p>
+    </div>
+    <div class="card">
+      <div class="krow">
+        <span class="krow-left"><span class="ok-text">Reclaimed rent</span></span>
+        <b id="doneAmount" class="ok-text">+0 SOL</b>
+      </div>
+    </div>
+    <button id="doneScanBtn" class="btn-primary btn-block">Scan again</button>
+  </section>
+
+  <!-- ============ SCREEN 6 · empty ============ -->
+  <section id="view-empty" class="view hidden">
+    <div class="topbar">
+      <div class="brand">
+        <span class="brand-mark"><span class="logo-flame sm"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></span>
+        <div class="brand-stack"><span class="brand-name">Sol Burn</span><span class="brand-sub">RENT CLEANER</span></div>
+      </div>
+      <button class="icon-btn settings-go" aria-label="Settings"><span class="ic-gear"></span></button>
+    </div>
+    <div class="hero-center">
+      <div class="shield-wrap"><span class="ic-shield"></span><span class="shield-badge">✓</span></div>
+      <h2 class="h2">Nothing to reclaim right now.</h2>
+      <p class="muted">As you trade, dead accounts pile up. The badge on your toolbar ticks up when there's SOL to grab — that's your cue to come back.</p>
+    </div>
+    <button id="emptyScanBtn" class="btn-primary btn-block">Scan again</button>
+  </section>
+
+  <!-- ============ SCREEN 7 · error ============ -->
+  <section id="view-error" class="view hidden">
+    <div class="topbar">
+      <div class="brand">
+        <span class="brand-mark"><span class="logo-flame sm"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></span>
+        <span class="brand-name">Sol Burn</span>
+      </div>
+      <span class="pill pill-off"><span class="dot red"></span>OFFLINE</span>
+    </div>
+    <div class="hero-center">
+      <div class="err-ring"><span class="ic-warn"></span></div>
+      <h2 id="errTitle" class="h2">Scan failed</h2>
+      <p id="errMsg" class="muted">Couldn't reach the network. Check your connection and try again.</p>
+    </div>
+    <div class="ref-wrap">
+      <button id="diagToggle" class="diag-toggle"><span class="ic-term"></span>Diagnostics<span class="chev">⌄</span></button>
+      <div id="diagBox" class="diag-box hidden"><code id="diagText"></code></div>
+    </div>
+    <button id="errRetryBtn" class="btn-primary btn-block">Try again</button>
+  </section>
+
+  <!-- ============ SCREEN 8 · settings ============ -->
+  <section id="view-settings" class="view hidden">
+    <div class="topbar">
+      <div class="brand">
+        <button id="settingsBack" class="icon-btn" aria-label="Back"><span class="ic-back"></span></button>
+        <span class="brand-name">Settings</span>
+      </div>
+      <span class="pill pill-brand"><span class="logo-flame xs"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span>Sol Burn</span>
+    </div>
+
+    <div class="card card-pad">
+      <div class="set-row"><span class="set-ic"><span class="ic-bell"></span></span><h3>Alert threshold</h3></div>
+      <p class="muted">SOL amount that triggers the toolbar badge notification</p>
+      <div class="set-input"><input id="thresholdInput" type="text" inputmode="decimal" value="0.05" /><span class="unit-tag">SOL</span></div>
+    </div>
+
+    <div class="card card-pad">
+      <div class="set-row"><span class="set-ic blue"><span class="ic-server"></span></span><h3>RPC endpoint</h3><span class="pill pill-live sm">Public Cluster</span></div>
+      <p class="muted">Default is public cluster. Paste your own private RPC key (Helius, QuickNode, Triton) for high-speed indexing.</p>
+      <div class="set-input"><input id="rpcInput" type="text" placeholder="https://…" autocomplete="off" spellcheck="false" /></div>
+    </div>
+
+    <button id="settingsSave" class="btn-primary btn-block">Save settings</button>
+    <button id="settingsReset" class="btn-ghost btn-block">Reset wallet &amp; cache</button>
+    <div class="foot-strip"><span><a id="ghLink" href="#" class="link">View on GitHub</a> · v1.2</span></div>
+  </section>
+
+</div>
 <script src="popup.bundle.js"></script>
 </body>
 </html>
