@@ -12,6 +12,7 @@
 
 import { BrowserSDK, AddressType } from '@phantom/browser-sdk';
 import { Transaction } from '@solana/web3.js';
+import { Buffer } from 'buffer';
 
 const $ = (id) => document.getElementById(id);
 
