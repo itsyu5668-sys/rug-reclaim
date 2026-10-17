@@ -1,0 +1,1 @@
+{"dependencies":{"@phantom/browser-sdk":"^1.0.0","@solana/spl-token":"^0.4.9","@solana/web3.js":"^1.98.0"},"description":"Rug Reclaim Chrome extension (MV3). Bundled with esbuild — no remote code.","devDependencies":{"esbuild":"^0.24.0"},"name":"rug-reclaim-extension","private":true,"scripts":{"build":"node build.mjs"},"version":"0.1.0"}
