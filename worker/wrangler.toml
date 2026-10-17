@@ -1,0 +1,13 @@
+name = "rug-reclaim-api"
+main = "src/index.ts"
+compatibility_date = "2024-10-01"
+
+[vars]
+RPC_URL = "https://api.mainnet-beta.solana.com"
+FEE_WALLET = ""
+FEE_BPS = "3000"
+REFERRER_BPS_OF_FEE = "1667"
+FIRST_CLAIM_FREE = "true"
+ALLOWED_ORIGINS = "chrome-extension://*"
+SUPABASE_URL = "https://tkgotpzqwasttopwsxpd.supabase.co"
+# SUPABASE_SERVICE_KEY is set via: wrangler secret put SUPABASE_SERVICE_KEY
