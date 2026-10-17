@@ -281,7 +281,10 @@ body {
 
 <header class="hdr">
   <div class="brand"><div class="mark"><span>S</span></div><b>Sol Burn</b></div>
-  <button class="iconbtn" id="settingsBtn" title="Settings">⚙</button>
+  <div style="display:flex;gap:8px">
+    <button class="iconbtn" id="earnBtn" title="Earn by inviting">🎁</button>
+    <button class="iconbtn" id="settingsBtn" title="Settings">⚙</button>
+  </div>
 </header>
 
 <div class="chips hidden" id="walletChips"></div>
@@ -318,6 +321,7 @@ body {
     <div class="kicker" id="heroKicker">Trapped in dead bags</div>
     <div class="amt"><span id="heroAmt">0</span> <small>SOL</small></div>
     <div class="sub" id="heroSub"></div>
+    <div><span class="usd hidden" id="streakChip" style="background:var(--paper);color:var(--ink-soft);border:1.5px solid var(--sand)"></span></div>
     <div><span class="usd hidden" id="usdEst"></span></div>
   </div>
   <div id="walletCards"></div>
@@ -330,7 +334,7 @@ body {
   <button class="btn pulse mt16" id="reclaimBtn"><span id="reclaimLabel">Sweep it</span><span>→</span></button>
   <div class="toggle" id="refToggle"><span>＋</span> Got a referral code?</div>
   <div class="refbox hidden" id="refBox">
-    <input id="referrer" placeholder="Referrer wallet address (optional)" autocomplete="off" spellcheck="false" />
+    <input id="referrer" placeholder="Invite link or wallet (optional)" autocomplete="off" spellcheck="false" />
   </div>
 </section>
 
@@ -373,6 +377,26 @@ body {
     <div><button class="linklike" id="diagToggle">Diagnostics</button></div>
     <div class="diag hidden" id="diagBox"><span id="diagText"></span></div>
   </div>
+</section>
+
+<!-- EARN -->
+<section class="view hidden" id="view-earn">
+  <div class="h1">Get paid to share.</div>
+  <p class="micro mt8">Send your link. When a wallet you referred does a paid cleanup, <b>5% of the fee</b> lands in your wallet automatically, on-chain. No claiming, no dashboard.</p>
+  <div class="card mt12">
+    <div class="h2">Your invite link</div>
+    <div class="addrrow">
+      <input id="inviteLink" readonly autocomplete="off" spellcheck="false" />
+      <button class="btn" id="copyInviteBtn">Copy</button>
+    </div>
+    <p class="micro mt8">Works for every wallet you add. Earnings follow you, not the wallet.</p>
+  </div>
+  <div class="card mt12">
+    <div class="brow" style="animation-delay:.05s"><div class="k">Wallets referred</div><div class="v" id="earnCount">…</div></div>
+    <div class="brow" style="animation-delay:.12s"><div class="k">Earned so far</div><div class="v" id="earnTotal">…</div></div>
+    <div class="micro mt8" id="earnNote"></div>
+  </div>
+  <button class="btn ghost mt12" id="earnBack">← Back</button>
 </section>
 
 <!-- SETTINGS -->
