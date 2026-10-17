@@ -150,7 +150,7 @@ async function updateBadge(totalLamports) {
   await chrome.action.setBadgeText({ text });
   await chrome.action.setBadgeBackgroundColor({ color: '#7c3aed' });
   await chrome.action.setTitle({
-    title: totalLamports > 0n ? `${formatSol(totalLamports)} SOL trapped — open to reclaim` : 'Rug Reclaim',
+    title: totalLamports > 0n ? `${formatSol(totalLamports)} SOL trapped, open to reclaim` : 'Sol Burn',
   });
 }
 
