@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
-<html lang="en"><head><meta charset="utf-8"/><title>Sol Burn — Recover SOL trapped in dead token accounts</title><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<html lang="en"><head><meta charset="utf-8"/><title>Sol Burn: Recover SOL trapped in dead token accounts</title><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary":"#ab3326","on-secondary-fixed":"#410000","surface":"#fafaf3","primary":"#2e6c00","on-tertiary-fixed":"#001d36","tertiary":"#0061a3","surface-bright":"#fafaf3","on-primary-fixed":"#092100","sandstone":"#e0dbce","on-primary":"#ffffff","on-secondary-container":"#6d0201","on-tertiary":"#ffffff","outline-variant":"#c1c9b6","background":"#fafaf3","outline":"#717a69","on-secondary":"#ffffff","on-tertiary-container":"#00528a","surface-tint":"#2e6c00","on-surface":"#1a1c19","pure-white":"#ffffff","secondary-fixed-dim":"#ffb4a8","primary-fixed-dim":"#93d966","tertiary-fixed":"#d1e4ff","error":"#ba1a1a","error-container":"#ffdad6","ink-black":"#2c2e2a","on-tertiary-fixed-variant":"#00497c","sky-pop":"#2ba0ff","stone-gray":"#80827f","inverse-primary":"#93d966","surface-container-low":"#f4f4ee","tertiary-fixed-dim":"#9ecaff","primary-fixed":"#adf67f","coral-pop":"#ff705d","secondary-fixed":"#ffdad5","surface-dim":"#dadad4","cream-paper":"#f5f1e4","on-error":"#ffffff","surface-variant":"#e3e3dd","surface-container-lowest":"#ffffff","primary-container":"#8ed462","surface-container-highest":"#e3e3dd","on-secondary-fixed-variant":"#8a1b12","surface-container":"#eeeee8","on-error-container":"#93000a","on-primary-container":"#265b00","on-surface-variant":"#41493a","fresh-grass":"#8ed462","on-primary-fixed-variant":"#215100","inverse-on-surface":"#f1f1eb","inverse-surface":"#2f312d","on-background":"#1a1c19","sunshine-pop":"#f5e211","secondary-container":"#fd6e5b","tertiary-container":"#95c6ff","surface-container-high":"#e8e9e2"},borderRadius:{"DEFAULT":"1rem","lg":"2rem","xl":"3rem","full":"9999px"},spacing:{"space-xs":"0.25rem","margin-mobile":"1.25rem","margin":"2.5rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.5rem","gutter-mobile":"1rem","space-sm":"0.5rem","space-xl":"2.5rem"},fontFamily:{"body-lg":["Inter"],"label-lg":["Inter"],"headline-xl-mobile":["Inter"],"label-md":["Inter"],"headline-xl":["Inter"],"body-sm":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"headline-lg-mobile":["Inter"],"headline-lg":["Inter"],"headline-sm":["Inter"],"headline-md":["Inter"]},fontSize:{"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"label-lg":["15px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"headline-xl-mobile":["34px",{"lineHeight":"42px","letterSpacing":"-0.025em","fontWeight":"800"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.01em","fontWeight":"600"}],"headline-xl":["48px",{"lineHeight":"56px","letterSpacing":"-0.03em","fontWeight":"800"}],"body-sm":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"body-md":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-lg-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-sm":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"700"}]}}}};</script></head><body class="bg-cream-paper text-ink-black min-h-screen"><header class="fixed top-0 left-0 right-0 z-50 pointer-events-none pt-4 px-4"><div class="h-20 max-w-7xl mx-auto flex items-center justify-between pointer-events-auto bg-pure-white/95 backdrop-blur-xl px-6 rounded-full shadow-[0_8px_24px_-4px_rgba(44,46,42,0.08)]"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-fresh-grass flex items-center justify-center text-ink-black"><span class="material-symbols-outlined text-[20px]">local_fire_department</span></div><div class="flex items-center gap-2"><span class="font-headline-sm text-headline-sm text-ink-black tracking-tight">Sol Burn</span><span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant">Solana Rent Recovery</span></div></div><nav class="hidden lg:flex items-center gap-1" data-active-classes="bg-surface-container text-ink-black font-semibold"><a aria-current="page" class="px-4 py-2 rounded-full transition-colors bg-surface-container text-ink-black font-semibold" data-path="how-it-works" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">How it works</a><a class="px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-ink-black hover:bg-surface-container/60 transition-colors" data-path="fee" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">Fee</a><a class="px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-ink-black hover:bg-surface-container/60 transition-colors" data-path="referrals" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">Referrals</a><a class="px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-ink-black hover:bg-surface-container/60 transition-colors" data-path="faq" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">FAQ</a><a class="px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-ink-black hover:bg-surface-container/60 transition-colors" data-path="extension-flow" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">Extension Flow</a></nav><div class="flex items-center gap-3"><a class="flex items-center gap-2 bg-fresh-grass hover:bg-primary-container text-ink-black px-5 py-2.5 rounded-full font-label-md text-label-md shadow-[0_4px_12px_rgba(142,212,98,0.25)] transition-colors" data-path="install" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener"><span class="w-2 h-2 rounded-full bg-sunshine-pop"></span><span>Add to Chrome — it's free</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-cream-paper"><div class="flex flex-col w-full">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary":"#ab3326","on-secondary-fixed":"#410000","surface":"#fafaf3","primary":"#2e6c00","on-tertiary-fixed":"#001d36","tertiary":"#0061a3","surface-bright":"#fafaf3","on-primary-fixed":"#092100","sandstone":"#e0dbce","on-primary":"#ffffff","on-secondary-container":"#6d0201","on-tertiary":"#ffffff","outline-variant":"#c1c9b6","background":"#fafaf3","outline":"#717a69","on-secondary":"#ffffff","on-tertiary-container":"#00528a","surface-tint":"#2e6c00","on-surface":"#1a1c19","pure-white":"#ffffff","secondary-fixed-dim":"#ffb4a8","primary-fixed-dim":"#93d966","tertiary-fixed":"#d1e4ff","error":"#ba1a1a","error-container":"#ffdad6","ink-black":"#2c2e2a","on-tertiary-fixed-variant":"#00497c","sky-pop":"#2ba0ff","stone-gray":"#80827f","inverse-primary":"#93d966","surface-container-low":"#f4f4ee","tertiary-fixed-dim":"#9ecaff","primary-fixed":"#adf67f","coral-pop":"#ff705d","secondary-fixed":"#ffdad5","surface-dim":"#dadad4","cream-paper":"#f5f1e4","on-error":"#ffffff","surface-variant":"#e3e3dd","surface-container-lowest":"#ffffff","primary-container":"#8ed462","surface-container-highest":"#e3e3dd","on-secondary-fixed-variant":"#8a1b12","surface-container":"#eeeee8","on-error-container":"#93000a","on-primary-container":"#265b00","on-surface-variant":"#41493a","fresh-grass":"#8ed462","on-primary-fixed-variant":"#215100","inverse-on-surface":"#f1f1eb","inverse-surface":"#2f312d","on-background":"#1a1c19","sunshine-pop":"#f5e211","secondary-container":"#fd6e5b","tertiary-container":"#95c6ff","surface-container-high":"#e8e9e2"},borderRadius:{"DEFAULT":"1rem","lg":"2rem","xl":"3rem","full":"9999px"},spacing:{"space-xs":"0.25rem","margin-mobile":"1.25rem","margin":"2.5rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.5rem","gutter-mobile":"1rem","space-sm":"0.5rem","space-xl":"2.5rem"},fontFamily:{"body-lg":["Inter"],"label-lg":["Inter"],"headline-xl-mobile":["Inter"],"label-md":["Inter"],"headline-xl":["Inter"],"body-sm":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"headline-lg-mobile":["Inter"],"headline-lg":["Inter"],"headline-sm":["Inter"],"headline-md":["Inter"]},fontSize:{"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"label-lg":["15px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"headline-xl-mobile":["34px",{"lineHeight":"42px","letterSpacing":"-0.025em","fontWeight":"800"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.01em","fontWeight":"600"}],"headline-xl":["48px",{"lineHeight":"56px","letterSpacing":"-0.03em","fontWeight":"800"}],"body-sm":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"body-md":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-lg-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-sm":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"700"}]}}}};</script></head><body class="bg-cream-paper text-ink-black min-h-screen"><header class="fixed top-0 left-0 right-0 z-50 pointer-events-none pt-4 px-4"><div class="h-20 max-w-7xl mx-auto flex items-center justify-between pointer-events-auto bg-pure-white/95 backdrop-blur-xl px-6 rounded-full shadow-[0_8px_24px_-4px_rgba(44,46,42,0.08)]"><div class="flex items-center gap-3"><div class="flex items-center gap-2"><span class="font-headline-sm text-headline-sm text-ink-black tracking-tight">Sol Burn</span></div></div><nav class="hidden lg:flex items-center gap-1" data-active-classes="bg-surface-container text-ink-black font-semibold"><a aria-current="page" class="px-4 py-2 rounded-full transition-colors bg-surface-container text-ink-black font-semibold" data-path="how-it-works" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">How it works</a><a class="px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-ink-black hover:bg-surface-container/60 transition-colors" data-path="fee" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">Fee</a><a class="px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-ink-black hover:bg-surface-container/60 transition-colors" data-path="faq" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">FAQ</a><a class="px-4 py-2 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-ink-black hover:bg-surface-container/60 transition-colors" data-path="extension-flow" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">Extension Flow</a></nav><div class="flex items-center gap-3"><a class="flex items-center gap-2 bg-fresh-grass hover:bg-primary-container text-ink-black px-5 py-2.5 rounded-full font-label-md text-label-md shadow-[0_4px_12px_rgba(142,212,98,0.25)] transition-colors" data-path="install" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener"><span class="w-2 h-2 rounded-full bg-sunshine-pop"></span><span>Add to Chrome, it's free</span></a></div></div></header><main class="w-full pt-20 bg-cream-paper"><div class="flex flex-col w-full">
 <!-- Top Ambient Glow Field -->
 <div class="relative w-full overflow-hidden">
 <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-sunshine-pop/25 rounded-full blur-3xl pointer-events-none"></div>
@@ -13,37 +13,29 @@
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
 <!-- Left Column: Copy & Actions -->
 <div class="lg:col-span-7 flex flex-col items-start gap-space-lg">
-<!-- Eyebrow Pill -->
-<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sandstone/70 text-ink-black font-label-sm text-label-sm uppercase tracking-wider shadow-sm">
-<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
-            SOLANA RENT RECOVERY
-          </div>
+
 <!-- Giant Display Headline -->
 <h1 class="font-headline-xl text-headline-xl lg:text-[62px] lg:leading-[68px] text-ink-black tracking-tight font-extrabold max-w-2xl">
             Your dead coins are still holding your SOL.
           </h1>
 <!-- Editorial Subheadline -->
 <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
-            Sol Burn finds the rent trapped in token accounts you stopped caring about — rugged, dumped, forgotten — and puts it back in your wallet in one click.
+            Sol Burn finds the rent trapped in token accounts you stopped caring about, rugged, dumped, forgotten, and puts it back in your wallet in one click.
           </p>
 <!-- CTA Pill Block & Microcopy -->
-<div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto pt-2">
+<div class="flex justify-center w-full pt-2">
 <a class="inline-flex items-center justify-center gap-3 bg-fresh-grass hover:bg-primary-container text-ink-black px-8 py-4 rounded-full font-label-lg text-label-lg shadow-md hover:shadow-lg transition-all duration-200 group" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">
 <span class="w-3 h-3 rounded-full bg-sunshine-pop group-hover:scale-125 transition-transform"></span>
-<span>Add to Chrome — it's free</span>
+<span>Add to Chrome, it's free</span>
 <span class="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>
 </a>
-<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-pure-white/70 shadow-sm text-on-surface-variant font-label-md text-label-md">
-<span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
-<span>First cleanup free. No wallet connection to scan.</span>
-</div>
 </div>
 <!-- Quick Live Metric Snippet -->
 <div class="flex items-center gap-4 pt-4 text-on-surface-variant font-label-sm text-label-sm">
 <div class="flex -space-x-2">
 <div class="w-7 h-7 rounded-full bg-sandstone flex items-center justify-center text-[10px] font-bold text-ink-black shadow-sm">9k</div>
 <div class="w-7 h-7 rounded-full bg-tertiary-fixed flex items-center justify-center text-[10px] font-bold text-ink-black shadow-sm">SOL</div>
-<div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center text-[10px] font-bold text-ink-black shadow-sm">🔥</div>
+<div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center text-[12px] font-bold text-ink-black shadow-sm">◎</div>
 </div>
 <span>Average rent recovered: ~0.002039 SOL per zero-balance token</span>
 </div>
@@ -56,16 +48,7 @@
 <div class="relative w-full max-w-[390px] bg-pure-white rounded-[44px] p-6 shadow-xl flex flex-col gap-5 text-ink-black">
 <!-- Extension Window Bar -->
 <div class="flex items-center justify-between pb-3">
-<div class="flex items-center gap-2">
-<div class="w-8 h-8 rounded-full bg-fresh-grass flex items-center justify-center">
-<span class="material-symbols-outlined text-ink-black text-[18px]">local_fire_department</span>
-</div>
-<div>
-<div class="font-headline-sm text-headline-sm leading-tight text-ink-black">Sol Burn</div>
-<div class="font-label-sm text-label-sm text-stone-gray">Chrome Extension v2.4</div>
-</div>
-</div>
-<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-sandstone/60 font-label-sm text-label-sm text-on-surface-variant">Mainnet-beta</span>
+<div class="flex items-center gap-2"><div class="font-headline-sm text-headline-sm leading-tight text-ink-black">Sol Burn</div></div>
 </div>
 <!-- Address Input Read-Only Pill -->
 <div class="bg-surface-container rounded-full px-4 py-2.5 flex items-center justify-between">
@@ -97,14 +80,14 @@
 <div class="flex flex-col gap-2">
 <div class="flex items-center justify-between p-2.5 rounded-2xl bg-surface-container-low text-ink-black text-sm">
 <div class="flex items-center gap-2">
-<span class="w-6 h-6 rounded-full bg-coral-pop/20 text-coral-pop flex items-center justify-center font-bold text-xs">💩</span>
+<span class="w-6 h-6 rounded-full bg-coral-pop/20 flex items-center justify-center overflow-hidden"><img src="https://assets.coingecko.com/coins/images/28600/large/bonk.jpg" alt="BONK" class="w-6 h-6 rounded-full object-cover" onerror="this.outerHTML='<span class=\'font-bold text-xs text-coral-pop\'>BK</span>'"/></span>
 <span class="font-label-md text-label-md truncate max-w-[120px]">$BONK2.0 (Empty)</span>
 </div>
 <span class="font-label-md text-label-md font-bold text-ink-black">+0.00204 SOL</span>
 </div>
 <div class="flex items-center justify-between p-2.5 rounded-2xl bg-surface-container-low text-ink-black text-sm">
 <div class="flex items-center gap-2">
-<span class="w-6 h-6 rounded-full bg-sky-pop/20 text-tertiary flex items-center justify-center font-bold text-xs">🚀</span>
+<span class="w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center font-bold text-[10px] text-ink-black">MC</span>
 <span class="font-label-md text-label-md truncate max-w-[120px]">$MOONCAT (Rugged)</span>
 </div>
 <span class="font-label-md text-label-md font-bold text-ink-black">+0.00204 SOL</span>
@@ -130,19 +113,19 @@
 <div class="w-12 h-12 rounded-full bg-fresh-grass/30 flex items-center justify-center shrink-0">
 <span class="material-symbols-outlined text-primary text-[24px]">visibility</span>
 </div>
-<span class="font-label-lg text-label-lg text-ink-black">Scan before you sign — see the number first</span>
+<span class="font-label-lg text-label-lg text-ink-black">Scan before you sign, see the number first</span>
 </div>
 <div class="p-6 rounded-[50px] bg-pure-white shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
 <div class="w-12 h-12 rounded-full bg-sunshine-pop/40 flex items-center justify-center shrink-0">
 <span class="material-symbols-outlined text-ink-black text-[24px]">lock_open</span>
 </div>
-<span class="font-label-lg text-label-lg text-ink-black">Non-custodial — we never hold your funds</span>
+<span class="font-label-lg text-label-lg text-ink-black">Non-custodial, we never hold your funds</span>
 </div>
 <div class="p-6 rounded-[50px] bg-pure-white shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
 <div class="w-12 h-12 rounded-full bg-sandstone flex items-center justify-center shrink-0">
 <span class="material-symbols-outlined text-ink-black text-[24px]">code</span>
 </div>
-<span class="font-label-lg text-label-lg text-ink-black">Open source — read every line</span>
+<span class="font-label-lg text-label-lg text-ink-black">Open source, read every line</span>
 </div>
 <div class="p-6 rounded-[50px] bg-pure-white shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
 <div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0">
@@ -160,19 +143,9 @@
 <span class="material-symbols-outlined text-[28px]">currency_exchange</span>
 </div>
 <div>
-<div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-sandstone/70 font-label-sm text-label-sm text-ink-black uppercase">
-<span class="w-2 h-2 rounded-full bg-fresh-grass"></span>
-            Verified On-Chain
-          </div>
 <div class="font-headline-lg text-headline-lg lg:text-[40px] text-ink-black font-extrabold tracking-tight mt-1">
             <span id="statSol">…</span> SOL reclaimed by <span id="statWallets">…</span> wallets
           </div>
-</div>
-</div>
-<div class="shrink-0 flex items-center gap-3">
-<div class="px-5 py-3 rounded-full bg-pure-white shadow-sm font-label-md text-label-md text-on-surface-variant flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[18px]">bolt</span>
-<span>Avg speed: 1.4s per block</span>
 </div>
 </div>
 </div>
@@ -232,7 +205,6 @@
 <span class="material-symbols-outlined text-[18px]">check_circle</span>
             Confirmed
           </span>
-<span class="font-label-sm text-label-sm text-stone-gray">Slot #28938102</span>
 </div>
 </div>
 </div>
@@ -241,10 +213,9 @@
 <section class="w-full max-w-7xl mx-auto px-margin-mobile lg:px-margin py-12">
 <div class="rounded-[50px] bg-pure-white p-8 lg:p-14 shadow-md flex flex-col lg:flex-row items-center justify-between gap-10">
 <div class="flex flex-col items-start gap-4 max-w-2xl">
-<span class="px-4 py-1 rounded-full bg-sandstone/70 font-label-sm text-label-sm uppercase tracking-wider text-ink-black">No Hidden Margins</span>
 <h2 class="font-headline-lg text-headline-lg text-ink-black font-bold">Transparent, Zero-Surprise Fee</h2>
 <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-          First cleanup: free. After that: 30% of what we recover. The fee is inside the transaction — Phantom shows it to you before you sign, and the math is open source.
+          First cleanup: free. After that: 30% of what we recover. The fee is inside the transaction. Phantom shows it to you before you sign, and the math is open source.
         </p>
 <div class="flex flex-wrap gap-3 pt-2">
 <span class="px-4 py-2 rounded-full bg-surface-container font-label-md text-label-md text-ink-black flex items-center gap-2">
@@ -273,52 +244,6 @@
 <span class="font-headline-sm text-headline-sm font-bold text-ink-black">Net to You:</span>
 <span class="font-headline-sm text-headline-sm font-extrabold text-primary">0.700 SOL</span>
 </div>
-<div class="text-center font-label-sm text-label-sm text-stone-gray bg-pure-white/80 py-2 rounded-full">
-          Shown directly in Phantom simulator
-        </div>
-</div>
-</div>
-</section>
-<!-- Referrals Section -->
-<section class="w-full max-w-7xl mx-auto px-margin-mobile lg:px-margin py-12">
-<div class="rounded-[50px] bg-sandstone/40 p-8 lg:p-14 shadow-sm flex flex-col lg:flex-row items-center gap-10">
-<div class="flex flex-col items-start gap-4 lg:w-1/2">
-<span class="px-4 py-1.5 rounded-full bg-coral-pop/20 text-secondary font-label-sm text-label-sm uppercase tracking-wider font-bold">Affiliate Program</span>
-<h2 class="font-headline-lg text-headline-lg text-ink-black font-bold">Earn with Sol Burn</h2>
-<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-          Give your link to a trader. When they reclaim, you earn a cut of the fee — paid automatically, every time.
-        </p>
-<div class="flex items-center gap-3 text-on-surface-variant font-label-md text-label-md pt-2">
-<span class="w-2.5 h-2.5 rounded-full bg-fresh-grass"></span>
-<span>Instant on-chain distribution directly to your signer wallet</span>
-</div>
-</div>
-<!-- Referral Generator Card Mockup -->
-<div class="w-full lg:w-1/2 p-7 rounded-[40px] bg-pure-white shadow-md flex flex-col gap-4">
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-coral-pop">share</span>
-<span class="font-headline-sm text-headline-sm text-ink-black">Your Partner Link</span>
-</div>
-<span class="px-3 py-1 rounded-full bg-fresh-grass/30 text-primary font-label-sm text-label-sm font-bold">Active</span>
-</div>
-<div class="bg-surface-container rounded-full p-2 pl-5 flex items-center justify-between gap-2">
-<span class="font-label-md text-label-md text-ink-black truncate">https://solburn.xyz/r/phantom-whale</span>
-<button class="bg-ink-black text-pure-white hover:bg-stone-gray px-5 py-2.5 rounded-full font-label-md text-label-md shrink-0 flex items-center gap-1.5 transition-colors">
-<span class="material-symbols-outlined text-[16px]">content_copy</span>
-<span>Copy</span>
-</button>
-</div>
-<div class="grid grid-cols-2 gap-3 pt-2">
-<div class="p-4 rounded-3xl bg-cream-paper flex flex-col">
-<span class="font-label-sm text-label-sm text-stone-gray">Total Referrals</span>
-<span class="font-headline-md text-headline-md text-ink-black font-bold">142</span>
-</div>
-<div class="p-4 rounded-3xl bg-cream-paper flex flex-col">
-<span class="font-label-sm text-label-sm text-stone-gray">Earned SOL</span>
-<span class="font-headline-md text-headline-md text-primary font-bold">4.28 SOL</span>
-</div>
-</div>
 </div>
 </div>
 </section>
@@ -326,7 +251,7 @@
 <section class="w-full max-w-7xl mx-auto px-margin-mobile lg:px-margin py-16">
 <div class="flex flex-col items-center text-center gap-3 mb-12">
 <span class="px-4 py-1.5 rounded-full bg-sandstone font-label-sm text-label-sm uppercase tracking-wider text-ink-black">Frequently Asked</span>
-<h2 class="font-headline-lg text-headline-lg text-ink-black font-bold">Clear answers, zero jargon.</h2>
+<h2 class="font-headline-lg text-headline-lg text-ink-black font-bold">Clear answers, no BS.</h2>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <!-- FAQ 1 -->
@@ -336,7 +261,7 @@
 <h3 class="font-headline-sm text-headline-sm text-ink-black">Is this safe?</h3>
 </div>
 <p class="font-body-md text-body-md text-on-surface-variant pl-11">
-          The scan is read-only. The claim is a transaction you approve in Phantom, and you can read exactly what it does — the code is open source.
+          The scan is read-only. The claim is a transaction you approve in Phantom, and you can read exactly what it does. The code is open source.
         </p>
 </div>
 <!-- FAQ 2 -->
@@ -377,10 +302,7 @@
 <!-- Decorative paper circles -->
 <div class="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-pure-white/40 blur-xl pointer-events-none"></div>
 <div class="absolute -bottom-12 -right-12 w-64 h-64 rounded-full bg-fresh-grass/20 blur-xl pointer-events-none"></div>
-<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pure-white shadow-sm text-ink-black font-label-sm text-label-sm uppercase tracking-wider">
-<span class="w-2 h-2 rounded-full bg-coral-pop"></span>
-        Zero Installation Risk
-      </div>
+
 <h2 class="font-headline-xl text-headline-xl lg:text-[56px] lg:leading-[64px] text-ink-black font-extrabold max-w-2xl tracking-tight">
         Stop leaving SOL in dead accounts.
       </h2>
@@ -390,7 +312,7 @@
 <div class="pt-4 flex flex-col sm:flex-row items-center gap-4">
 <a class="inline-flex items-center justify-center gap-3 bg-fresh-grass hover:bg-primary-container text-ink-black px-9 py-4 rounded-full font-label-lg text-label-lg shadow-md hover:shadow-lg transition-all group" href="https://github.com/itsyu5668-sys/rug-reclaim" target="_blank" rel="noopener">
 <span class="w-3 h-3 rounded-full bg-sunshine-pop group-hover:scale-125 transition-transform"></span>
-<span>Add to Chrome — it's free</span>
+<span>Add to Chrome, it's free</span>
 <span class="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>
 </a>
 </div>
