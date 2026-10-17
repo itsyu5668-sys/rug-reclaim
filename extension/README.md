@@ -1,6 +1,6 @@
 # Sol Burn — Chrome extension
 
-One-click recovery of SOL locked in dead token accounts. Read-only scan first — the user sees the number before signing anything.
+One-click recovery of SOL locked in dead token accounts. Read-only scan first. The user sees the number before signing anything.
 
 ## Design
 
@@ -47,3 +47,7 @@ node build.mjs   # → popup/popup.bundle.js + ../worker/src/static/signer.bundl
 - Read-only scan first — nothing to sign until the user sees the number.
 - Fee (30% after first free cleanup) shown exactly once in the popup + in Phantom's tx preview.
 - Repo is public; no remote code; crypto utilities are explicitly allowed on the store.
+
+## Multi-wallet
+
+Add as many wallets as you want (popup header chips or Settings). The badge aggregates trapped SOL across all wallets; tap a wallet chip to focus it, or stay on All for the combined graveyard view. Reclaiming runs per wallet.
