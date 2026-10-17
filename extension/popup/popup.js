@@ -59,7 +59,10 @@ async function runScan(owner, { force = false } = {}) {
     if (result.total > 0n) await renderResults(result, owner);
     else renderEmpty();
   } catch (err) {
-    renderError('Scan failed', `Couldn't reach the network. Check your connection and try again.`, err.message, () => runScan(owner, { force: true }));
+    const hint = /403/.test(err.message || '')
+      ? 'The network endpoint blocked the scan. Try again, or set a custom RPC endpoint in Settings.'
+      : `Couldn't reach the network. Check your connection and try again.`;
+    renderError('Scan failed', hint, err.message, () => runScan(owner, { force: true }));
   }
 }
 
