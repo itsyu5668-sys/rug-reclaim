@@ -297,6 +297,19 @@
 </div>
 </section>
 <!-- Final CTA Section with Sunshine Pop Accent -->
+<section class="w-full max-w-7xl mx-auto px-margin-mobile lg:px-margin py-10">
+<div class="rounded-[36px] bg-pure-white border border-sandstone p-8 lg:p-12 flex flex-col lg:flex-row items-start lg:items-center gap-8">
+<div class="flex-1">
+<h2 class="font-headline-lg text-headline-lg text-ink-black font-extrabold tracking-tight">Get paid to share.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-3 max-w-md">Every wallet you refer earns you <b>5% of the fee</b> from their paid cleanups. Paid automatically, on-chain, no claiming. Your invite link lives in the extension under the gift icon.</p>
+</div>
+<div class="flex gap-10">
+<div><div class="font-headline-md text-headline-md font-extrabold text-ink-black">5%</div><div class="font-label-sm text-label-sm text-stone-gray mt-1">of every referred fee</div></div>
+<div><div class="font-headline-md text-headline-md font-extrabold text-ink-black">Auto</div><div class="font-label-sm text-label-sm text-stone-gray mt-1">paid on-chain</div></div>
+<div><div class="font-headline-md text-headline-md font-extrabold text-ink-black">∞</div><div class="font-label-sm text-label-sm text-stone-gray mt-1">referral limit</div></div>
+</div>
+</div>
+</section>
 <section class="w-full max-w-7xl mx-auto px-margin-mobile lg:px-margin pt-6 pb-20">
 <div class="rounded-[54px] bg-gradient-to-br from-sunshine-pop/40 via-sunshine-pop/20 to-fresh-grass/20 p-10 lg:p-20 shadow-lg flex flex-col items-center text-center gap-6 relative overflow-hidden">
 <!-- Decorative paper circles -->
@@ -341,6 +354,33 @@
     if (solEl) solEl.textContent = sol.toLocaleString(undefined, {maximumFractionDigits: 2});
     if (wEl) wEl.textContent = s.totalUsers.toLocaleString();
   } catch (e) { /* keep placeholder */ }
+})();
+</script>
+<div id="inviteBanner" class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-[92vw]">
+<div class="flex items-center gap-3 bg-ink-black text-surface px-5 py-3.5 rounded-2xl shadow-xl">
+<span class="material-symbols-outlined text-fresh-grass">card_giftcard</span>
+<span class="font-body-sm text-body-sm">You were invited. Paste this code in the extension's referral box:</span>
+<code id="inviteCode" class="font-mono text-[13px] bg-white/10 px-2.5 py-1 rounded-lg"></code>
+<button id="inviteCopy" class="bg-fresh-grass text-ink-black font-label-sm text-label-sm font-bold px-4 py-1.5 rounded-full">Copy</button>
+<button id="inviteClose" class="text-surface/60 hover:text-surface font-bold px-1">✕</button>
+</div>
+</div>
+<script>
+(function () {
+  var ref = new URLSearchParams(location.search).get('ref') || '';
+  if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(ref)) return;
+  var banner = document.getElementById('inviteBanner');
+  document.getElementById('inviteCode').textContent = ref.slice(0, 8) + '…' + ref.slice(-6);
+  banner.classList.remove('hidden');
+  document.getElementById('inviteCopy').addEventListener('click', function () {
+    var btn = this;
+    (navigator.clipboard ? navigator.clipboard.writeText(ref) : Promise.reject())
+      .then(function () { btn.textContent = 'Copied'; })
+      .catch(function () { btn.textContent = 'Copy failed'; });
+  });
+  document.getElementById('inviteClose').addEventListener('click', function () {
+    banner.classList.add('hidden');
+  });
 })();
 </script>
 </body></html>
