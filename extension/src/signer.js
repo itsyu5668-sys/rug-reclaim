@@ -40,6 +40,19 @@ function setStatus(html, kind = '') {
   el.className = kind;
 }
 
+function setStep(n) {
+  // n: 1-based active step; 0 = all idle, 4 = all done
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById('st' + i);
+    if (!el) continue;
+    el.classList.toggle('on', i === n);
+    el.classList.toggle('done', n === 4 || i < n);
+    if (n === 4 || i < n) el.querySelector('.n').textContent = '✓';
+  }
+  const spin = document.getElementById('spin');
+  if (spin) spin.style.display = n === 4 ? 'none' : '';
+}
+
 function extId() {
   const m = /#ext=([a-z]+)/.exec(location.hash);
   return m ? m[1] : null;
@@ -61,7 +74,8 @@ async function main() {
 
     const { txs, owner, referrerToRegister, apiBase } = claim;
 
-    setStatus('connecting to Phantom…');
+    setStep(1);
+    setStatus('Connecting to Phantom…');
     const sdk = new BrowserSDK({
       providers: ['injected'],
       addressTypes: [AddressType.solana],
@@ -80,6 +94,7 @@ async function main() {
     }
 
     // Optional: register the referrer before claiming (signed message, one tap).
+    setStep(2);
     if (referrerToRegister) {
       try {
         setStatus('registering your referrer…');
@@ -94,6 +109,7 @@ async function main() {
     }
 
     const signatures = [];
+    setStep(3);
     for (let i = 0; i < txs.length; i++) {
       setStatus(
         `signing transaction ${i + 1} of ${txs.length}…<br><span class="dim">check the Phantom preview — the fee is listed there</span>`,
@@ -105,8 +121,10 @@ async function main() {
     }
 
     await talk({ type: 'claimComplete', signatures });
+    setStep(4);
+    document.getElementById('spin').style.display = 'none';
     setStatus(
-      `done — ${signatures.length} transaction${signatures.length > 1 ? 's' : ''} confirmed.<br>` +
+      `<div class="check">✓</div>Done — ${signatures.length} transaction${signatures.length > 1 ? 's' : ''} confirmed.<br>` +
         `<span class="dim">this tab closes in a few seconds</span>`,
       'ok',
     );
