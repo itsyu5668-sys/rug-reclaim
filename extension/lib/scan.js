@@ -81,13 +81,14 @@ async function scanProgram(owner, programId, rpc, dataSize) {
 
     if (amount === 0n) {
       if (lamports > 0n) {
-        dead.push({ pubkey, mint: shortKey(bytesToBase58(bytes, 0, 32)), lamports });
+        dead.push({ pubkey, program: programId, mint: shortKey(bytesToBase58(bytes, 0, 32)), lamports });
       }
     } else {
       const rentExempt = await rentExemptFor(bytes.length);
       if (lamports > rentExempt + SURPLUS_DUST_LAMPORTS) {
         surplus.push({
           pubkey,
+          program: programId,
           mint: shortKey(bytesToBase58(bytes, 0, 32)),
           lamports,
           withdrawable: lamports - rentExempt,
