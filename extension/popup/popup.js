@@ -109,7 +109,7 @@ async function renderResults(result, owner) {
     if (free) {
       banner.innerHTML =
         `<div class="fee-left"><div class="fee-ic">✨</div><div>` +
-        `<div class="fee-title">First cleanup FREE <span class="norm">— keep all ${formatSol(result.totalRecoverable)} SOL</span></div>` +
+        `<div class="fee-title">First cleanup FREE <span class="norm">, keep all ${formatSol(result.totalRecoverable)} SOL</span></div>` +
         `<div class="fee-sub">Regular 30% thereafter</div></div></div>` +
         `<span class="fee-tag">100% OFF</span>`;
       $('reclaimLabel').textContent = `Reclaim ${formatSol(result.totalRecoverable)} SOL`;
@@ -126,7 +126,7 @@ async function renderResults(result, owner) {
     show(banner);
     $('refToggle').parentElement.classList.toggle('hidden', !!referrer);
   } catch (err) {
-    banner.innerHTML = `<div class="fee-left"><div><div class="fee-title">Couldn't load fee info</div><div class="fee-sub">Reclaim still works — try again.</div></div></div>`;
+    banner.innerHTML = `<div class="fee-left"><div><div class="fee-title">Couldn't load fee info</div><div class="fee-sub">Reclaim still works. Try again.</div></div></div>`;
     show(banner);
     currentClaimMeta = { free: false, referrer: null };
   }
@@ -201,7 +201,7 @@ $('scanBtn').addEventListener('click', () => {
   const owner = $('addr').value.trim();
   if (!isPlausibleAddress(owner)) {
     const e = $('addrError');
-    e.textContent = "That doesn't look like a Solana address — check it and try again.";
+    e.textContent = "That doesn't look like a Solana address. Check it and try again.";
     show(e);
     return;
   }
