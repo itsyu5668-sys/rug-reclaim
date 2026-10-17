@@ -169,6 +169,21 @@ async function updateBadge(totalLamports) {
         ? `${formatSolExact(totalLamports)} SOL trapped across your wallets, open to reclaim`
         : 'Sol Burn',
   });
+  // "Vibration": pulse the badge when the trapped total grows, so the icon
+  // grabs the eye without a notification.
+  try {
+    const { lastBadgeTotal } = await chrome.storage.local.get('lastBadgeTotal');
+    const prev = typeof lastBadgeTotal === 'string' ? BigInt(lastBadgeTotal) : 0n;
+    await chrome.storage.local.set({ lastBadgeTotal: totalLamports.toString() });
+    if (totalLamports > prev && prev >= 0n) {
+      for (let i = 0; i < 5; i++) {
+        await chrome.action.setBadgeBackgroundColor({ color: '#d9a821' });
+        await new Promise((r) => setTimeout(r, 350));
+        await chrome.action.setBadgeBackgroundColor({ color: '#7c3aed' });
+        await new Promise((r) => setTimeout(r, 350));
+      }
+    }
+  } catch {}
 }
 
 async function maybeNotify(totalLamports) {
