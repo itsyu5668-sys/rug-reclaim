@@ -3,7 +3,7 @@ main = "src/index.ts"
 compatibility_date = "2024-10-01"
 
 [vars]
-RPC_URL = "https://api.mainnet-beta.solana.com"
+# RPC_URL is set via: wrangler secret put RPC_URL (Helius URL with key)
 FEE_WALLET = "DfgDg4A2Tb6VR438XhCiUKenbVBMEcigNHymZffpef8z"
 FEE_BPS = "3000"
 REFERRER_BPS_OF_FEE = "1667"
