@@ -2,201 +2,402 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<link rel="stylesheet" href="popup.css" />
+<style>
+/* Sol Burn popup — warm storybook editorial, gamified for meme coin traders.
+   Self-contained: no CDN, no webfonts. Cream/grass/ink only. */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #f5f1e4;
+  --paper: #fffdf6;
+  --grass: #8ed462;
+  --grass-deep: #6db84a;
+  --ink: #2c2e2a;
+  --ink-soft: #5a5d58;
+  --sand: #e8e0c8;
+  --gold: #d9a821;
+}
+html, body { width: 380px; }
+body {
+  font-family: "Inter", -apple-system, "Segoe UI", sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 480px;
+  overflow-x: hidden;
+}
+.hidden { display: none !important; }
+.view { padding: 18px 16px 22px; animation: viewIn .25s ease-out; }
+@keyframes viewIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* header */
+.hdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 4px; }
+.brand { display: flex; align-items: center; gap: 9px; }
+.brand .mark {
+  width: 30px; height: 30px; border-radius: 10px; background: var(--grass);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-style: italic; font-size: 19px; color: var(--ink);
+  transform: skewX(-8deg); box-shadow: 0 2px 0 rgba(44,46,42,.18);
+}
+.brand .mark span { display: inline-block; }
+.brand b { font-size: 16px; letter-spacing: -0.02em; }
+.iconbtn {
+  width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--sand);
+  background: var(--paper); cursor: pointer; font-size: 15px; color: var(--ink-soft);
+  display: flex; align-items: center; justify-content: center;
+}
+.iconbtn:hover { background: #fff; color: var(--ink); }
+
+/* wallet chips */
+.chips { display: flex; gap: 8px; padding: 10px 16px 2px; overflow-x: auto; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 6px;
+  padding: 7px 13px; border-radius: 999px; border: 1.5px solid var(--sand);
+  background: var(--paper); font-size: 12.5px; font-weight: 600; color: var(--ink-soft);
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.chip .dot { width: 7px; height: 7px; border-radius: 50%; background: #c9c2a8; }
+.chip.on { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.chip.on .dot { background: var(--grass); }
+.chip.add { border-style: dashed; }
+.chip small { font-weight: 500; opacity: .75; }
+
+/* cards */
+.card {
+  background: var(--paper); border-radius: 22px; padding: 18px;
+  box-shadow: 0 4px 18px -6px rgba(44,46,42,.10); border: 1px solid rgba(232,224,200,.7);
+}
+.micro { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; }
+.h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; }
+.h2 { font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
+
+/* buttons */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 15px; border-radius: 999px; border: none; cursor: pointer;
+  background: var(--grass); color: var(--ink); font-size: 15px; font-weight: 800;
+  letter-spacing: -0.01em; box-shadow: 0 4px 0 var(--grass-deep), 0 8px 20px -6px rgba(109,184,74,.5);
+  transition: transform .08s, box-shadow .08s;
+}
+.btn:hover:not(:disabled) { filter: brightness(1.04); }
+.btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--grass-deep); }
+.btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+.btn.ghost { background: var(--paper); border: 1.5px solid var(--sand); box-shadow: none; font-weight: 700; font-size: 13.5px; padding: 12px; }
+.btn.pulse { animation: btnPulse 2s infinite; }
+@keyframes btnPulse {
+  0%, 100% { box-shadow: 0 4px 0 var(--grass-deep), 0 0 0 0 rgba(142,212,98,.55); }
+  50% { box-shadow: 0 4px 0 var(--grass-deep), 0 0 0 12px rgba(142,212,98,0); }
+}
+.addrrow { display: flex; gap: 8px; margin-top: 12px; }
+.addrrow input {
+  flex: 1; min-width: 0; padding: 13px 15px; border-radius: 999px;
+  border: 1.5px solid var(--sand); background: #fff; font-size: 13px; color: var(--ink);
+  font-family: ui-monospace, monospace;
+}
+.addrrow input:focus { outline: none; border-color: var(--grass-deep); }
+.addrrow .btn { width: auto; padding: 13px 20px; }
+
+/* loading: radar */
+.radar-wrap { display: flex; flex-direction: column; align-items: center; padding: 34px 0 10px; }
+.radar {
+  width: 150px; height: 150px; border-radius: 50%; position: relative;
+  background:
+    radial-gradient(circle, transparent 29%, var(--sand) 30%, transparent 31%),
+    radial-gradient(circle, transparent 59%, var(--sand) 60%, transparent 61%),
+    radial-gradient(circle, var(--paper) 0%, var(--paper) 100%);
+  border: 2px solid var(--sand); overflow: hidden;
+}
+.radar::before {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(142,212,98,.85), transparent 22%);
+  animation: sweep 1.6s linear infinite;
+}
+@keyframes sweep { to { transform: rotate(360deg); } }
+.radar::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  border: 3px solid var(--grass); opacity: 0;
+  animation: ping 1.6s ease-out infinite;
+}
+@keyframes ping { 0% { transform: scale(.35); opacity: .9; } 100% { transform: scale(1.15); opacity: 0; } }
+.radar .blip {
+  position: absolute; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 8px var(--gold);
+  animation: blip 1.6s ease-in-out infinite;
+}
+@keyframes blip { 0%, 100% { opacity: .15; transform: scale(.7); } 50% { opacity: 1; transform: scale(1.25); } }
+.load-status { margin-top: 18px; font-size: 14px; font-weight: 700; min-height: 22px; }
+.load-sub { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+
+/* results hero */
+.hero { text-align: center; padding: 20px 12px 16px; position: relative; }
+.hero .kicker {
+  display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .14em;
+  color: var(--ink-soft); text-transform: uppercase; margin-bottom: 8px;
+}
+.hero .amt {
+  font-size: 44px; font-weight: 900; letter-spacing: -0.04em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.hero .amt small { font-size: 20px; font-weight: 800; color: var(--ink-soft); }
+.hero .sub { margin-top: 8px; font-size: 13px; color: var(--ink-soft); }
+.hero .usd { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 800;
+  background: var(--ink); color: var(--cream); padding: 5px 14px; border-radius: 999px; }
+
+/* wallet cards (All mode) */
+.wcard {
+  display: flex; align-items: center; gap: 12px; background: var(--paper);
+  border: 1px solid rgba(232,224,200,.7); border-radius: 18px; padding: 14px 15px; margin-top: 10px;
+  cursor: pointer; transition: transform .12s; animation: rowIn .3s ease-out backwards;
+}
+.wcard:hover { transform: translateY(-1px); }
+.wcard .ava {
+  width: 40px; height: 40px; border-radius: 14px; background: var(--grass);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-style: italic; font-size: 18px; color: var(--ink); flex: 0 0 auto;
+}
+.wcard .meta { flex: 1; min-width: 0; }
+.wcard .meta .a { font-family: ui-monospace, monospace; font-size: 12px; color: var(--ink-soft); }
+.wcard .meta .b { font-size: 15px; font-weight: 800; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.wcard .go {
+  width: 38px; height: 38px; border-radius: 50%; background: var(--ink); color: var(--cream);
+  border: none; font-size: 17px; cursor: pointer; flex: 0 0 auto;
+}
+@keyframes rowIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
+
+/* breakdown rows */
+.brow {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 13px 4px; border-bottom: 1px dashed var(--sand); font-size: 13.5px;
+  animation: rowIn .3s ease-out backwards;
+}
+.brow:last-child { border-bottom: none; }
+.brow .v { font-weight: 800; font-variant-numeric: tabular-nums; }
+.brow .k small { display: block; color: var(--ink-soft); font-size: 11.5px; font-weight: 500; }
+
+/* fee banner */
+.fee {
+  margin-top: 14px; border-radius: 18px; padding: 14px 15px;
+  background: linear-gradient(135deg, #fff8e1, #fdf3d0);
+  border: 1.5px solid var(--gold); display: flex; align-items: center; gap: 12px;
+}
+.fee .fee-ic { font-size: 22px; }
+.fee .fee-title { font-size: 13.5px; font-weight: 800; }
+.fee .fee-title .norm { font-weight: 500; color: var(--ink-soft); }
+.fee .fee-sub { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+.fee .fee-tag {
+  margin-left: auto; flex: 0 0 auto; font-size: 10.5px; font-weight: 900;
+  background: var(--ink); color: var(--cream); padding: 5px 10px; border-radius: 999px;
+  letter-spacing: .06em;
+}
+
+/* claiming: XP bar + pipeline */
+.xpbar { height: 14px; border-radius: 999px; background: var(--sand); overflow: hidden; margin: 14px 0 6px; }
+.xpfill {
+  height: 100%; width: 0%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--grass-deep), var(--grass));
+  transition: width .4s ease; position: relative;
+}
+.xpfill::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+  animation: shimmer 1.2s linear infinite;
+}
+@keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+.xplabel { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); text-align: center; }
+.pipe-row {
+  display: flex; align-items: center; gap: 12px; padding: 11px 4px;
+  border-bottom: 1px dashed var(--sand); animation: rowIn .25s ease-out;
+}
+.pipe-ic {
+  width: 30px; height: 30px; border-radius: 50%; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800;
+  background: var(--sand); color: var(--ink-soft);
+}
+.pipe-ic.wait { animation: bob 1s ease-in-out infinite; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.pipe-ic.busy { background: var(--gold); color: var(--ink); animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.pipe-ic.done { background: var(--grass); color: var(--ink); animation: pop .3s ease-out; }
+@keyframes pop { 0% { transform: scale(.5); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+.pipe-main { flex: 1; }
+.pipe-title { font-size: 13px; font-weight: 700; }
+.pipe-sub { font-size: 11.5px; color: var(--ink-soft); }
+.pipe-sub.dim { opacity: .6; }
+.pipe-amt { font-size: 13px; font-weight: 800; color: var(--grass-deep); font-variant-numeric: tabular-nums; }
+
+/* done burst */
+.done-wrap { text-align: center; padding: 26px 0 8px; position: relative; }
+.done-amt { font-size: 46px; font-weight: 900; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.done-amt small { font-size: 20px; color: var(--ink-soft); font-weight: 800; }
+.particle {
+  position: absolute; width: 9px; height: 9px; border-radius: 50%;
+  pointer-events: none; animation: burst 1.1s ease-out forwards;
+}
+@keyframes burst {
+  0% { opacity: 1; transform: translate(0,0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(.3); }
+}
+
+/* empty / error */
+.empty-wrap, .error-wrap { text-align: center; padding: 40px 18px; }
+.empty-wrap .big { font-size: 52px; }
+.error-wrap .big { font-size: 44px; }
+.diag {
+  margin-top: 12px; text-align: left; background: var(--ink); color: #e8e4d2;
+  font-family: ui-monospace, monospace; font-size: 10.5px; padding: 12px;
+  border-radius: 12px; max-height: 130px; overflow: auto; white-space: pre-wrap;
+  word-break: break-all;
+}
+.linklike { background: none; border: none; color: var(--ink-soft); font-size: 12.5px;
+  cursor: pointer; text-decoration: underline; margin-top: 10px; }
+
+/* settings */
+.setrow { margin-top: 14px; }
+.setrow label { font-size: 12.5px; font-weight: 700; display: block; margin-bottom: 6px; }
+.setrow input {
+  width: 100%; padding: 12px 14px; border-radius: 14px; border: 1.5px solid var(--sand);
+  background: #fff; font-size: 13px; color: var(--ink);
+}
+.setrow input:focus { outline: none; border-color: var(--grass-deep); }
+.wmrow {
+  display: flex; align-items: center; gap: 10px; padding: 10px 4px;
+  border-bottom: 1px dashed var(--sand); font-family: ui-monospace, monospace; font-size: 12px;
+}
+.wmrow .x {
+  margin-left: auto; border: none; background: #f3ddd4; color: #a33b1f; font-weight: 800;
+  width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 13px;
+}
+.refbox { margin-top: 12px; }
+.refbox input {
+  width: 100%; padding: 11px 14px; border-radius: 14px; border: 1.5px solid var(--sand);
+  background: #fff; font-size: 12px; font-family: ui-monospace, monospace; color: var(--ink);
+}
+.toggle { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 13px;
+  font-weight: 700; cursor: pointer; color: var(--ink-soft); }
+.mt8 { margin-top: 8px; } .mt12 { margin-top: 12px; } .mt16 { margin-top: 16px; }
+.center { text-align: center; }
+</style>
 </head>
 <body>
-<div id="app">
 
-  <!-- ============ SCREEN 1 · first run / scan ============ -->
-  <section id="view-scan" class="view">
-    <div class="topbar">
-      <span class="netpill"><span class="dot"></span>SOLANA MAINNET</span>
-    </div>
-    <div class="hero-center">
-      <div class="logo-ring"><span class="logo-flame"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></div>
-      <h1 class="app-title">Sol Burn</h1>
-      <p class="app-tag">Find the SOL trapped in your dead token accounts.</p>
-    </div>
-    <div class="scan-box">
-      <label for="addr">Wallet address</label>
-      <input id="addr" type="text" placeholder="paste a Solana address" autocomplete="off" spellcheck="false" />
-      <div id="addrError" class="error hidden"></div>
-      <button id="scanBtn" class="btn-primary btn-block">Scan my wallet</button>
-      <p class="micro">Read-only. No wallet connection, no signature. You see the number first.</p>
-    </div>
-    <div class="foot-strip">
-      <span>Non-custodial · open source · you approve every transaction</span>
-    </div>
-  </section>
+<header class="hdr">
+  <div class="brand"><div class="mark"><span>S</span></div><b>Sol Burn</b></div>
+  <button class="iconbtn" id="settingsBtn" title="Settings">⚙</button>
+</header>
 
-  <!-- ============ SCREEN 2 · scanning ============ -->
-  <section id="view-loading" class="view hidden">
-    <div class="topbar">
-      <span class="netpill"><span class="dot"></span>SOLANA MAINNET</span>
-    </div>
-    <div class="hero-center">
-      <div class="spinner-lg"></div>
-      <h2 class="h2">Scanning your token accounts…</h2>
-      <p class="muted">Checking every token account for trapped rent.</p>
-    </div>
-  </section>
+<div class="chips hidden" id="walletChips"></div>
 
-  <!-- ============ SCREEN 3 · results / money screen ============ -->
-  <section id="view-results" class="view hidden">
-    <div class="topbar">
-      <div class="brand">
-        <span class="brand-mark"><span class="logo-flame sm"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></span>
-        <span class="brand-name">Sol Burn</span>
-        <span class="brand-ver">v1.2</span>
-      </div>
-      <button id="settingsBtn" class="icon-btn" aria-label="Settings"><span class="ic-gear"></span></button>
+<!-- SCAN / ADD WALLET -->
+<section class="view hidden" id="view-scan">
+  <div class="card">
+    <div class="h1">Drop a wallet.<br />We'll sniff out the dead bags.</div>
+    <p class="micro mt8">Read-only scan. No connection, no signature. You see the number first, always.</p>
+    <div class="addrrow">
+      <input id="addrInput" placeholder="Solana wallet address…" autocomplete="off" spellcheck="false" />
+      <button class="btn" id="addWalletBtn">Hunt</button>
     </div>
+    <p class="micro mt8 hidden" id="addrError" style="color:#a33b1f;font-weight:700"></p>
+  </div>
+  <div class="card mt12 hidden" id="knownWalletsCard">
+    <div class="h2">Your wallets</div>
+    <div id="knownWallets"></div>
+  </div>
+</section>
 
-    <div class="money-hero">
-      <span class="pill"><span class="dot"></span>RECOVERABLE RENT BALANCE</span>
-      <div class="bignum"><span id="totalSol">0</span><span class="unit">SOL</span></div>
-      <p class="trapped-line">trapped across <span id="acctCount">0</span> accounts · <span id="usdEst" class="usd"></span></p>
-    </div>
+<!-- LOADING -->
+<section class="view hidden" id="view-loading">
+  <div class="radar-wrap">
+    <div class="radar"><div class="blip" style="top:30%;left:60%"></div><div class="blip" style="top:62%;left:32%;animation-delay:.5s"></div><div class="blip" style="top:48%;left:74%;animation-delay:1s"></div></div>
+    <div class="load-status" id="loadStatus">Sniffing out dead bags…</div>
+    <div class="load-sub">Scanning Token + Token-2022 accounts</div>
+  </div>
+</section>
 
-    <div class="card">
-      <div class="krow">
-        <span class="krow-left"><span class="krow-ic"><span class="ic-folder"></span></span><span id="deadLabel">Dead accounts</span></span>
-        <b id="deadSol">0 SOL</b>
-      </div>
-      <div class="kdiv"></div>
-      <div class="krow">
-        <span class="krow-left"><span class="krow-ic"><span class="ic-coin"></span></span><span id="surplusLabel">Excess rent on live</span></span>
-        <b id="surplusSol">0 SOL</b>
-      </div>
-    </div>
+<!-- RESULTS -->
+<section class="view hidden" id="view-results">
+  <div class="hero">
+    <div class="kicker" id="heroKicker">Trapped in dead bags</div>
+    <div class="amt"><span id="heroAmt">0</span> <small>SOL</small></div>
+    <div class="sub" id="heroSub"></div>
+    <div><span class="usd hidden" id="usdEst"></span></div>
+  </div>
+  <div id="walletCards"></div>
+  <div class="card mt12 hidden" id="detailCard">
+    <div class="brow" style="animation-delay:.05s"><div class="k">Dead accounts<small>Rugs, dumps, forgotten mints. Full rent back.</small></div><div class="v" id="deadVal"></div></div>
+    <div class="brow" style="animation-delay:.12s"><div class="k">Excess rent on live<small>Squatters above the rent minimum</small></div><div class="v" id="surplusVal"></div></div>
+    <div class="micro mt8" id="scannedAt"></div>
+  </div>
+  <div class="fee hidden" id="feeBanner"></div>
+  <button class="btn pulse mt16" id="reclaimBtn"><span id="reclaimLabel">Sweep it</span><span>→</span></button>
+  <div class="toggle" id="refToggle"><span>＋</span> Got a referral code?</div>
+  <div class="refbox hidden" id="refBox">
+    <input id="referrer" placeholder="Referrer wallet address (optional)" autocomplete="off" spellcheck="false" />
+  </div>
+</section>
 
-    <div id="feeBanner" class="fee-banner hidden"></div>
+<!-- CLAIMING -->
+<section class="view hidden" id="view-claiming">
+  <div class="h2 center">Sweeping the graveyard…</div>
+  <div class="xpbar"><div class="xpfill" id="xpFill"></div></div>
+  <div class="xplabel" id="xpLabel">Preparing…</div>
+  <div class="card mt12"><div id="pipeRows"></div></div>
+  <p class="micro center mt12" id="pipeStep"></p>
+</section>
 
-    <div class="ref-wrap">
-      <button id="refToggle" class="ref-toggle">Referred by a friend? Enter code <span class="chev">⌄</span></button>
-      <div id="refBox" class="ref-box hidden">
-        <input id="referrer" type="text" placeholder="friend's wallet address" autocomplete="off" spellcheck="false" />
-      </div>
-    </div>
+<!-- DONE -->
+<section class="view hidden" id="view-done">
+  <div class="done-wrap" id="doneWrap">
+    <div class="kicker" style="font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--ink-soft)">SWEPT</div>
+    <div class="done-amt"><span id="doneAmount">+0</span> <small>SOL</small></div>
+    <p class="micro mt8">Back in your wallet. The badge is already watching for the next pile.</p>
+  </div>
+  <button class="btn mt16" id="doneScanBtn">Scan again</button>
+</section>
 
-    <div class="cta-zone">
-      <button id="reclaimBtn" class="btn-primary btn-block btn-lg" disabled><span id="reclaimLabel">Reclaim</span><span class="arr">→</span></button>
-      <p class="meta"><span class="dot dim"></span><span id="scannedAt"></span></p>
-    </div>
+<!-- EMPTY -->
+<section class="view hidden" id="view-empty">
+  <div class="empty-wrap">
+    <div class="big">🧹</div>
+    <div class="h1 mt8">All clean.</div>
+    <p class="micro mt8">No dead bags, no squatters. Keep trading. The badge will tap you when there's SOL to grab.</p>
+    <button class="btn ghost mt16" id="emptyScanBtn">Rescan</button>
+  </div>
+</section>
 
-    <div class="foot-strip">
-      <span>Non-custodial · open source · you approve every transaction</span>
-    </div>
-  </section>
+<!-- ERROR -->
+<section class="view hidden" id="view-error">
+  <div class="error-wrap">
+    <div class="big">🛰️</div>
+    <div class="h2 mt8" id="errTitle">Scan failed</div>
+    <p class="micro mt8" id="errMsg"></p>
+    <button class="btn mt16" id="errRetryBtn">Try again</button>
+    <div><button class="linklike" id="diagToggle">Diagnostics</button></div>
+    <div class="diag hidden" id="diagBox"><span id="diagText"></span></div>
+  </div>
+</section>
 
-  <!-- ============ SCREEN 4 · claiming ============ -->
-  <section id="view-claiming" class="view hidden">
-    <div class="topbar">
-      <div class="brand">
-        <span class="brand-mark"><span class="logo-flame sm"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></span>
-        <div class="brand-stack"><span class="brand-name">SolBurn</span><span class="brand-sub">Rent Recovery</span></div>
-      </div>
-      <span class="pill pill-live"><span class="dot"></span>Signer Tab Active</span>
+<!-- SETTINGS -->
+<section class="view hidden" id="view-settings">
+  <div class="h1">Settings</div>
+  <div class="card mt12">
+    <div class="setrow">
+      <label>Alert threshold (SOL)</label>
+      <input id="thresholdInput" inputmode="decimal" />
     </div>
+    <div class="setrow">
+      <label>Custom RPC endpoint <span style="font-weight:500;color:var(--ink-soft)">(blank = automatic)</span></label>
+      <input id="rpcInput" placeholder="Leave blank for automatic" autocomplete="off" spellcheck="false" />
+    </div>
+    <button class="btn mt16" id="settingsSave">Save settings</button>
+  </div>
+  <div class="card mt12">
+    <div class="h2">Wallets</div>
+    <div id="walletManage"></div>
+  </div>
+  <button class="btn ghost mt12" id="settingsBack">← Back</button>
+  <button class="linklike" id="settingsReset" style="color:#a33b1f">Reset everything (wallets, cache, settings)</button>
+  <div class="center mt16"><button class="linklike" id="ghLink">Sol Burn on GitHub</button></div>
+</section>
 
-    <div class="card card-pad">
-      <h2 class="h2">Signer tab opened. Approve the transactions in Phantom.</h2>
-      <p class="muted">Check your browser window or extension bar.</p>
-      <p class="note-box">We bundle instructions to reclaim empty token addresses safely, without draining live balances.</p>
-    </div>
-
-    <div class="pipe-head"><span>TRANSACTION PIPELINE</span><span id="pipeStep" class="pipe-step"></span></div>
-    <div id="pipeRows" class="pipe-rows"></div>
-  </section>
-
-  <!-- ============ SCREEN 5 · claim complete ============ -->
-  <section id="view-done" class="view hidden">
-    <div class="topbar">
-      <div class="brand">
-        <span class="brand-mark"><span class="logo-flame sm"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></span>
-        <span class="brand-name">Sol Burn</span>
-      </div>
-    </div>
-    <div class="hero-center">
-      <div class="check-ring"><span class="ic-check-lg"></span></div>
-      <h2 class="h2">Done. SOL is back in your wallet.</h2>
-      <p class="muted">We'll keep watching. New dead accounts will show up on the badge.</p>
-    </div>
-    <div class="card">
-      <div class="krow">
-        <span class="krow-left"><span class="ok-text">Reclaimed rent</span></span>
-        <b id="doneAmount" class="ok-text">+0 SOL</b>
-      </div>
-    </div>
-    <button id="doneScanBtn" class="btn-primary btn-block">Scan again</button>
-  </section>
-
-  <!-- ============ SCREEN 6 · empty ============ -->
-  <section id="view-empty" class="view hidden">
-    <div class="topbar">
-      <div class="brand">
-        <span class="brand-mark"><span class="logo-flame sm"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></span>
-        <div class="brand-stack"><span class="brand-name">Sol Burn</span><span class="brand-sub">RENT CLEANER</span></div>
-      </div>
-      <button class="icon-btn settings-go" aria-label="Settings"><span class="ic-gear"></span></button>
-    </div>
-    <div class="hero-center">
-      <div class="shield-wrap"><span class="ic-shield"></span><span class="shield-badge">✓</span></div>
-      <h2 class="h2">Nothing to reclaim right now.</h2>
-      <p class="muted">As you trade, dead accounts pile up. The badge on your toolbar ticks up when there's SOL to grab — that's your cue to come back.</p>
-    </div>
-    <button id="emptyScanBtn" class="btn-primary btn-block">Scan again</button>
-  </section>
-
-  <!-- ============ SCREEN 7 · error ============ -->
-  <section id="view-error" class="view hidden">
-    <div class="topbar">
-      <div class="brand">
-        <span class="brand-mark"><span class="logo-flame sm"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span></span>
-        <span class="brand-name">Sol Burn</span>
-      </div>
-      <span class="pill pill-off"><span class="dot red"></span>OFFLINE</span>
-    </div>
-    <div class="hero-center">
-      <div class="err-ring"><span class="ic-warn"></span></div>
-      <h2 id="errTitle" class="h2">Scan failed</h2>
-      <p id="errMsg" class="muted">Couldn't reach the network. Check your connection and try again.</p>
-    </div>
-    <div class="ref-wrap">
-      <button id="diagToggle" class="diag-toggle"><span class="ic-term"></span>Diagnostics<span class="chev">⌄</span></button>
-      <div id="diagBox" class="diag-box hidden"><code id="diagText"></code></div>
-    </div>
-    <button id="errRetryBtn" class="btn-primary btn-block">Try again</button>
-  </section>
-
-  <!-- ============ SCREEN 8 · settings ============ -->
-  <section id="view-settings" class="view hidden">
-    <div class="topbar">
-      <div class="brand">
-        <button id="settingsBack" class="icon-btn" aria-label="Back"><span class="ic-back"></span></button>
-        <span class="brand-name">Settings</span>
-      </div>
-      <span class="pill pill-brand"><span class="logo-flame xs"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></span>Sol Burn</span>
-    </div>
-
-    <div class="card card-pad">
-      <div class="set-row"><span class="set-ic"><span class="ic-bell"></span></span><h3>Alert threshold</h3></div>
-      <p class="muted">SOL amount that triggers the toolbar badge notification</p>
-      <div class="set-input"><input id="thresholdInput" type="text" inputmode="decimal" value="0.05" /><span class="unit-tag">SOL</span></div>
-    </div>
-
-    <div class="card card-pad">
-      <div class="set-row"><span class="set-ic blue"><span class="ic-server"></span></span><h3>RPC endpoint</h3><span class="pill pill-live sm">Public Cluster</span></div>
-      <p class="muted">Default is public cluster. Paste your own private RPC key (Helius, QuickNode, Triton) for high-speed indexing.</p>
-      <div class="set-input"><input id="rpcInput" type="text" placeholder="Leave blank for automatic" autocomplete="off" spellcheck="false" /></div>
-    </div>
-
-    <button id="settingsSave" class="btn-primary btn-block">Save settings</button>
-    <button id="settingsReset" class="btn-ghost btn-block">Reset wallet &amp; cache</button>
-    <div class="foot-strip"><span><a id="ghLink" href="#" class="link">View on GitHub</a> · v1.2</span></div>
-  </section>
-
-</div>
 <script src="popup.bundle.js"></script>
 </body>
 </html>
