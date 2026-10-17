@@ -89,6 +89,7 @@ async function render(result, owner) {
   if (!hasDead) {
     els.reclaimBtn.textContent = 'Nothing to reclaim';
     els.feePreview.textContent = '';
+    hide(els.feePreview);
     return;
   }
 
@@ -104,6 +105,7 @@ async function render(result, owner) {
     currentClaimMeta = { free, referrer };
 
     const total = BigInt(result.totalRecoverable);
+    show(els.feePreview);
     if (free) {
       els.feePreview.innerHTML = `your first cleanup is <b class="free">FREE</b> — you keep all ${formatSol(result.totalRecoverable)} SOL`;
       els.reclaimBtn.textContent = `Reclaim ${formatSol(result.totalRecoverable)} SOL — free`;
@@ -119,6 +121,7 @@ async function render(result, owner) {
     if (!referrer) show(els.refRow); else hide(els.refRow);
   } catch (err) {
     els.feePreview.textContent = 'could not load fee info — reclaim still works, try again.';
+    show(els.feePreview);
     currentClaimMeta = { free: false, referrer: null };
   }
 }
