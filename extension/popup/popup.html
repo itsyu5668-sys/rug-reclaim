@@ -30,9 +30,10 @@
 
     <div class="breakdown">
       <div class="line"><span>dead accounts</span><b id="deadSol">0 SOL</b></div>
-      <div class="line"><span>excess rent (live accounts)</span><b id="surplusSol">0 SOL</b></div>
-      <div class="line fee"><span id="feePreview"></span></div>
+      <div class="line"><span>excess rent on live accounts</span><b id="surplusSol">0 SOL</b></div>
     </div>
+
+    <div id="feePreview" class="feeline hidden"></div>
 
     <div id="refRow" class="hidden">
       <label for="referrer" class="hint">referred by a friend? paste their wallet (optional)</label>
@@ -45,7 +46,7 @@
   </section>
 
   <footer>
-    <span>30% service fee after your first free cleanup · shown in the tx preview before you sign</span>
+    <span><span class="lock">◈</span> non-custodial · open source · you approve every transaction</span>
   </footer>
 
 <script src="popup.bundle.js"></script>
