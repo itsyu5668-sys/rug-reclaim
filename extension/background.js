@@ -3,8 +3,9 @@
 // re-engagement loop. Never touches web pages; talks only to the RPC endpoint.
 
 import { createRpc, DEFAULT_RPC_ENDPOINT } from './lib/rpc.js';
-import { scanWallet, shortSol, formatSol } from './lib/scan.js';
+import { scanWallet, shortSol, formatSol, formatSolExact } from './lib/scan.js';
 import { api } from './lib/api.js';
+import { saveScan, getWallets } from './lib/store.js';
 
 const RESCAN_PERIOD_MIN = 360; // 6h
 const DEFAULT_THRESHOLD_SOL = 0.05;
@@ -113,8 +114,14 @@ chrome.runtime.onMessageExternal.addListener((msg, sender, sendResponse) => {
         const { rpcEndpoint } = await chrome.storage.local.get('rpcEndpoint');
         const rpc = createRpc(rpcEndpoint || DEFAULT_RPC_ENDPOINT);
         const result = await scanWallet(claim.owner, rpc);
-        await chrome.storage.local.set({ lastScan: result });
-        await updateBadge(result.total);
+        await saveScan(claim.owner, result);
+        const wallets = await getWallets();
+        let grand = 0n;
+        for (const w of wallets) {
+          const r = await scanWallet(w, rpc);
+          grand += r.total;
+        }
+        await updateBadge(grand);
       } catch {}
       sendResponse({ ok: true });
       return;
@@ -129,28 +136,38 @@ chrome.runtime.onMessageExternal.addListener((msg, sender, sendResponse) => {
   return true; // async response
 });
 
-chrome.alarms.onAlarm.addListener(async (alarm) => {  if (alarm.name !== 'rescan') return;
-  const { owner, rpcEndpoint } = await chrome.storage.local.get(['owner', 'rpcEndpoint']);
-  if (!owner) return; // nothing watched yet
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name !== 'rescan') return;
+  const wallets = await getWallets();
+  if (!wallets.length) return; // nothing watched yet
 
   try {
+    const { rpcEndpoint } = await chrome.storage.local.get('rpcEndpoint');
     const rpc = createRpc(rpcEndpoint || DEFAULT_RPC_ENDPOINT);
-    const result = await scanWallet(owner, rpc);
-    await chrome.storage.local.set({ lastScan: result });
-    await updateBadge(result.total);
-    await maybeNotify(result.total);
+    let grand = 0n;
+    for (const w of wallets) {
+      const result = await scanWallet(w, rpc);
+      await saveScan(w, result);
+      grand += result.total;
+    }
+    await updateBadge(grand);
+    await maybeNotify(grand);
   } catch (err) {
     // RPC hiccup — stay quiet, next alarm retries. Never nag the user about infra.
-    console.warn('[rug-reclaim] background rescan failed:', err.message);
+    console.warn('[sol-burn] background rescan failed:', err.message);
   }
 });
 
 async function updateBadge(totalLamports) {
+  if (typeof totalLamports !== 'bigint') return;
   const text = shortSol(totalLamports);
   await chrome.action.setBadgeText({ text });
   await chrome.action.setBadgeBackgroundColor({ color: '#7c3aed' });
   await chrome.action.setTitle({
-    title: totalLamports > 0n ? `${formatSol(totalLamports)} SOL trapped, open to reclaim` : 'Sol Burn',
+    title:
+      totalLamports > 0n
+        ? `${formatSolExact(totalLamports)} SOL trapped across your wallets, open to reclaim`
+        : 'Sol Burn',
   });
 }
 
