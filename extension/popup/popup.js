@@ -3,7 +3,7 @@
 import { createRpc, DEFAULT_RPC_ENDPOINT } from '../lib/rpc.js';
 import { scanWallet, formatSol, formatSolExact, isPlausibleAddress } from '../lib/scan.js';
 import { buildClaimTransactions, formatSolBigint } from '../lib/claim-tx.js';
-import { api, API_BASE } from '../lib/api.js';
+import { api, API_BASE, SITE_URL, inviteLink, extractReferrer } from '../lib/api.js';
 import {
   saveScan, loadScan, getWallets, addWallet, removeWallet,
   getSelectedWallet, setSelectedWallet,
@@ -14,7 +14,7 @@ const SIGN_URL = `${API_BASE}/sign`;
 const PRICE_CACHE_MS = 10 * 60 * 1000;
 
 const $ = (id) => document.getElementById(id);
-const VIEWS = ['view-scan', 'view-loading', 'view-results', 'view-claiming', 'view-done', 'view-empty', 'view-error', 'view-settings'];
+const VIEWS = ['view-scan', 'view-loading', 'view-results', 'view-claiming', 'view-done', 'view-empty', 'view-error', 'view-earn', 'view-settings'];
 
 function showView(id) {
   for (const v of VIEWS) $(v).classList.toggle('hidden', v !== id);
@@ -529,7 +529,64 @@ chrome.runtime.onMessage.addListener((msg) => {
   }
 });
 
+/* streak: consecutive days the popup gets opened */
+async function trackStreak() {
+  const today = new Date().toISOString().slice(0, 10);
+  const { streak } = await chrome.storage.local.get('streak');
+  let { lastDay = '', count = 0 } = streak || {};
+  if (lastDay !== today) {
+    const y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+    count = lastDay === y ? count + 1 : 1;
+    await chrome.storage.local.set({ streak: { lastDay: today, count } });
+  }
+  return count || (streak && streak.count) || 1;
+}
+
+/* earn view */
+async function openEarn() {
+  showView('view-earn');
+  const wallets = await getWallets();
+  const me = wallets[0] || '';
+  $('inviteLink').value = me ? inviteLink(me) : 'Add a wallet first';
+  $('earnCount').textContent = '…';
+  $('earnTotal').textContent = '…';
+  $('earnNote').textContent = '';
+  if (!me) return;
+  try {
+    const info = await api.referralInfo(me);
+    $('earnCount').textContent = String(info.referredCount ?? 0);
+    const earned = BigInt(info.earnedLamports ?? 0);
+    $('earnTotal').textContent = `${formatSolExact(earned)} SOL`;
+    $('earnNote').textContent =
+      info.referredCount > 0
+        ? 'Paid automatically on-chain with every referred cleanup.'
+        : 'No referrals yet. Your link is above. Share it where traders hang out.';
+  } catch {
+    $('earnCount').textContent = '--';
+    $('earnTotal').textContent = '--';
+    $('earnNote').textContent = 'Referral stats come online once the backend database is connected.';
+  }
+}
+
 /* init: scan-on-open */
 document.addEventListener('DOMContentLoaded', () => {
+  $('earnBtn').addEventListener('click', openEarn);
+  $('earnBack').addEventListener('click', () => refresh(false));
+  $('copyInviteBtn').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText($('inviteLink').value);
+      $('copyInviteBtn').textContent = 'Copied';
+      setTimeout(() => ($('copyInviteBtn').textContent = 'Copy'), 1500);
+    } catch {
+      $('inviteLink').select();
+    }
+  });
+  trackStreak().then((n) => {
+    if (n >= 2) {
+      const c = $('streakChip');
+      c.textContent = `${n}-day streak`;
+      c.classList.remove('hidden');
+    }
+  });
   refresh(false);
 });
