@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">RUG RECLAIM</div>
+    <div class="tagline">dead accounts → your SOL back</div>
+  </header>
+
+  <section id="setup">
+    <label for="addr">Wallet address <span class="hint">(read-only scan — no connection needed)</span></label>
+    <div class="row">
+      <input id="addr" type="text" placeholder="paste a Solana address" autocomplete="off" spellcheck="false" />
+      <button id="scanBtn" class="primary">Scan</button>
+    </div>
+    <div id="addrError" class="error hidden"></div>
+  </section>
+
+  <section id="loading" class="hidden">
+    <div class="spinner"></div>
+    <div>scanning token accounts…</div>
+  </section>
+
+  <section id="results" class="hidden">
+    <div class="bignum"><span id="totalSol">0</span><span class="unit">SOL</span></div>
+    <div class="sub">trapped across <span id="acctCount">0</span> accounts</div>
+
+    <div class="breakdown">
+      <div class="line"><span>dead accounts</span><b id="deadSol">0 SOL</b></div>
+      <div class="line"><span>excess rent (live accounts)</span><b id="surplusSol">0 SOL</b></div>
+      <div class="line fee"><span>your first cleanup</span><b class="free">FREE</b></div>
+    </div>
+
+    <button id="reclaimBtn" class="primary big" disabled title="Step 2: Phantom connect + claim">
+      Reclaim — coming in step 2
+    </button>
+    <div id="scannedAt" class="meta"></div>
+  </section>
+
+  <footer>
+    <span>30% service fee after your first free cleanup · shown in the tx preview before you sign</span>
+  </footer>
+
+<script type="module" src="popup.js"></script>
+</body>
+</html>
