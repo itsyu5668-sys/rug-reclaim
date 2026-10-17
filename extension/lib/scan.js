@@ -29,6 +29,15 @@ export function formatSol(lamports) {
   return `${neg ? '-' : ''}${whole}${frac ? '.' + frac.slice(0, 4) : ''}`;
 }
 
+export function formatSolExact(lamports) {
+  // Full precision for the hero number: every lamport counts when it's yours.
+  const neg = lamports < 0n;
+  const abs = neg ? -lamports : lamports;
+  const whole = abs / LAMPORTS_PER_SOL;
+  const frac = (abs % LAMPORTS_PER_SOL).toString().padStart(9, '0').replace(/0+$/, '');
+  return `${neg ? '-' : ''}${whole}${frac ? '.' + frac : ''}`;
+}
+
 export function shortSol(lamports) {
   // Badge text: 4 chars max ("0.42", "12.3"). Empty when nothing trapped.
   if (lamports <= 0n) return '';
