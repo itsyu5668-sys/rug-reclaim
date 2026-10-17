@@ -4,6 +4,7 @@
 
 import { createRpc, DEFAULT_RPC_ENDPOINT } from './lib/rpc.js';
 import { scanWallet, shortSol, formatSol } from './lib/scan.js';
+import { api } from './lib/api.js';
 
 const RESCAN_PERIOD_MIN = 360; // 6h
 const DEFAULT_THRESHOLD_SOL = 0.05;
@@ -26,6 +27,106 @@ chrome.runtime.onMessage.addListener((msg) => {
   if (msg && msg.type === 'badge' && typeof msg.total === 'string') {
     updateBadge(BigInt(msg.total));
   }
+});
+
+// --- Signer-tab bridge ------------------------------------------------------
+// The signer tab is a real https:// page (served by our backend) where Phantom
+// injects its provider. It talks to us via externally_connectable messaging.
+// The pending claim is stashed by the popup in session storage (10-min TTL).
+
+const PENDING_TTL_MS = 10 * 60 * 1000;
+
+async function getPendingClaim() {
+  const { pendingClaim } = await chrome.storage.session.get('pendingClaim');
+  if (!pendingClaim) return null;
+  if (Date.now() - pendingClaim.createdAt > PENDING_TTL_MS) {
+    await chrome.storage.session.remove('pendingClaim');
+    return null;
+  }
+  return pendingClaim;
+}
+
+function relayToPopup(msg) {
+  // Popup may be closed — that's fine, the signer tab shows its own status.
+  chrome.runtime.sendMessage(msg).catch(() => {});
+}
+
+chrome.runtime.onMessageExternal.addListener((msg, sender, sendResponse) => {
+  (async () => {
+    if (!msg || typeof msg.type !== 'string') return;
+
+    if (msg.type === 'getClaimRequest') {
+      const claim = await getPendingClaim();
+      sendResponse(
+        claim
+          ? {
+              txs: claim.txs,
+              owner: claim.owner,
+              referrerToRegister: claim.referrerToRegister || null,
+            }
+          : null,
+      );
+      return;
+    }
+
+    if (msg.type === 'registerReferral') {
+      try {
+        await api.registerReferral(msg.body);
+        sendResponse({ ok: true });
+      } catch (err) {
+        sendResponse({ ok: false, error: err.message });
+      }
+      return;
+    }
+
+    if (msg.type === 'claimProgress') {
+      relayToPopup({ type: 'claimProgress', done: msg.done, total: msg.total, signature: msg.signature });
+      sendResponse({ ok: true });
+      return;
+    }
+
+    if (msg.type === 'claimComplete') {
+      const claim = await getPendingClaim();
+      if (claim) {
+        // Log each confirmed tx to the backend (drives first-claim-free + stats).
+        for (let i = 0; i < claim.txs.length; i++) {
+          const t = claim.txs[i];
+          try {
+            await api.logClaim({
+              wallet: claim.owner,
+              txSignature: msg.signatures[i] || `unknown-${i}`,
+              accountsClosed: t.accountsClosed,
+              lamportsReclaimed: t.lamportsReclaimed,
+              feeLamports: t.feeLamports,
+              referrerFeeLamports: t.referrerFeeLamports,
+              referrer: claim.referrer || null,
+            });
+          } catch (err) {
+            console.warn('[rug-reclaim] claim logging failed:', err.message);
+          }
+        }
+        await chrome.storage.session.remove('pendingClaim');
+      }
+      relayToPopup({ type: 'claimComplete' });
+      // Refresh the badge — the trapped amount should now be ~0.
+      try {
+        const { rpcEndpoint } = await chrome.storage.local.get('rpcEndpoint');
+        const rpc = createRpc(rpcEndpoint || DEFAULT_RPC_ENDPOINT);
+        const result = await scanWallet(claim.owner, rpc);
+        await chrome.storage.local.set({ lastScan: result });
+        await updateBadge(result.total);
+      } catch {}
+      sendResponse({ ok: true });
+      return;
+    }
+
+    if (msg.type === 'claimFailed') {
+      relayToPopup({ type: 'claimFailed', error: msg.error });
+      sendResponse({ ok: true });
+      return;
+    }
+  })();
+  return true; // async response
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {  if (alarm.name !== 'rescan') return;
