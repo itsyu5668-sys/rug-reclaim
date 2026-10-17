@@ -1,38 +1,49 @@
-# Rug Reclaim — Chrome extension (scaffold, step 1 of the build plan)
+# Sol Burn — Chrome extension
 
-Implements **step 1** of `~/workspace/your_files/sol-reclaim-build-plan.md` §7:
-scaffold + read-only scan + popup showing the trapped number. **No wallet needed.**
+One-click recovery of SOL locked in dead token accounts. Read-only scan first — the user sees the number before signing anything.
+
+## Design
+
+Warm storybook editorial (cream `#f5f1e4` + fresh grass `#8ed462`, Inter/system font, pill buttons, rounded cards). All 8 popup screens + landing page were designed by Francis; this repo implements them pixel-close with self-contained CSS (no CDN — MV3 forbids remote code).
 
 ## What's in here
 
 | File | Does |
 |---|---|
-| `manifest.json` | MV3. Permissions: `storage`, `alarms`, `notifications` + RPC host only. No content scripts, no `<all_urls>`, no `tabs` — the extension never touches web pages, which keeps the Chrome Web Store review easy. |
-| `popup/` | Scan-on-open UI. Paste any address → big trapped-SOL number → breakdown (dead accounts vs excess rent surplus on live accounts). Fee shown in the footer in plain words. "Reclaim" button is a disabled placeholder until step 2. |
-| `background.js` | Service worker. Rescans the watched address every 6h, updates the toolbar badge (`0.42`-style trapped SOL), fires a threshold notification (default 0.05 SOL, upward-crossing only — every alert is a revenue event). |
-| `lib/rpc.js` | Zero-dependency JSON-RPC client. |
-| `lib/scan.js` | `scanWallet(owner, rpc)`: `getProgramAccounts` on Token + Token-2022 with `memcmp` owner filter; dead accounts (zero balance → full lamports recoverable); live accounts with `lamports > getMinimumBalanceForRentExemption(len)` → withdrawable surplus (SIMD-0437, per build plan §2a). Never hardcodes lamport values. |
+| `manifest.json` | MV3. Permissions: `storage`, `alarms`, `notifications` + host permissions for Solana RPC, our API, and CoinGecko (price estimates). `externally_connectable` limited to our API domain for the signer tab. No content scripts, no `<all_urls>`, no `tabs`. |
+| `popup/` | All 8 screens: scan, scanning, results (money screen), claiming pipeline, claim complete, empty, error, settings. Bundled via esbuild → `popup.bundle.js`. |
+| `background.js` | Service worker: 6h rescan alarms, toolbar badge, threshold notifications, signer-tab message bridge, claim logging to backend. |
+| `lib/scan.js` | `scanWallet(owner, rpc)`: `getProgramAccounts` on Token + Token-2022; dead accounts (zero balance) + excess rent surplus on live accounts (SIMD-0437). Never hardcodes lamport values. |
+| `lib/claim-tx.js` | Builds batched close transactions (20/batch) with the in-tx fee split. Unit-tested. |
+| `lib/api.js` | Backend API client (config, claims, referrals, stats). |
+| `src/signer.js` | Signer tab logic, bundled to `../worker/src/static/signer.bundle.txt` and served by the backend at `/sign`. |
+
+## Screens
+
+1. **Scan** — paste address, read-only, no connection needed
+2. **Scanning** — spinner
+3. **Results** — hero number, breakdown card, ONE fee line, referral collapse, reclaim CTA
+4. **Claiming** — transaction pipeline with per-tx progress
+5. **Done** — success + auto-rescan
+6. **Empty** — habit-loop copy + badge explanation
+7. **Error** — offline/scan-failed states with diagnostics
+8. **Settings** — alert threshold, RPC endpoint, reset
+
+## Build
+
+```bash
+npm install
+node build.mjs   # → popup/popup.bundle.js + ../worker/src/static/signer.bundle.txt
+```
 
 ## Try it
 
 1. `chrome://extensions` → Developer mode → **Load unpacked** → this folder.
 2. Click the icon, paste a Solana address, hit Scan.
-3. The badge on the toolbar updates with the trapped total.
+3. Hit Reclaim → signer tab opens → approve in Phantom.
 
-## Still to do (steps 2–4 of the plan)
-
-- **Step 2:** Phantom connect + batch `createCloseAccountInstruction` closes (+ `WithdrawExcessLamports` for surplus) + in-tx 30% fee split + first-cleanup-free via Supabase. Needs the **fee-wallet address** (open decision).
-- **Step 3:** Referral links — `?ref=<wallet>` → signed `"sol-reclaim-referrer:<wallet>"` → wallet→referrer mapping → 70/25/5 in-tx split. Backend `/referrals` route already exists in `../worker`.
-- **Step 4:** Threshold tuning, streak counter, rug alerts.
-- **Step 5:** CWS assets (128px icon done — `icons/icon128.png`; still need screenshots + promo tile), privacy policy URL, submit.
-
-## Config
-
-- RPC endpoint: stored in `chrome.storage.local` as `rpcEndpoint`; defaults to `api.mainnet-beta.solana.com`. When you switch to Helius/QuickNode, **add its host to `host_permissions` in `manifest.json`** (MV3 requires declared hosts).
-- Threshold: `thresholdSol` in storage, default `0.05`.
-
-## Trust notes (for the listing, per plan §6)
+## Trust notes
 
 - Read-only scan first — nothing to sign until the user sees the number.
-- Fee (30% after first free cleanup) disclosed in the popup footer and, later, in the Phantom tx preview itself.
+- Fee (30% after first free cleanup) shown exactly once in the popup + in Phantom's tx preview.
 - Repo is public; no remote code; crypto utilities are explicitly allowed on the store.
