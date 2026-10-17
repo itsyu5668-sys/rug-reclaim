@@ -1,1 +1,29 @@
-{"action":{"default_popup":"popup/popup.html","default_title":"Rug Reclaim"},"background":{"service_worker":"background.js","type":"module"},"description":"One-click recovery of SOL locked in dead token accounts. Read-only scan first — you see the number before signing anything.","host_permissions":["https://api.mainnet-beta.solana.com/"],"manifest_version":3,"minimum_chrome_version":"116","name":"Rug Reclaim","permissions":["storage","alarms","notifications"],"version":"0.1.0"}
+{
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Rug Reclaim"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "description": "One-click recovery of SOL locked in dead token accounts. Read-only scan first \u2014 you see the number before signing anything.",
+  "host_permissions": [
+    "https://api.mainnet-beta.solana.com/",
+    "https://rug-reclaim-api.chideraezeudu2.workers.dev/"
+  ],
+  "manifest_version": 3,
+  "minimum_chrome_version": "116",
+  "name": "Rug Reclaim",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications"
+  ],
+  "version": "0.1.0",
+  "externally_connectable": {
+    "matches": [
+      "https://rug-reclaim-api.chideraezeudu2.workers.dev/*"
+    ]
+  }
+}
