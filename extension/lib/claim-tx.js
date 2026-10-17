@@ -12,6 +12,7 @@ import {
   Transaction,
 } from '@solana/web3.js';
 import { createCloseAccountInstruction } from '@solana/spl-token';
+import { Buffer } from 'buffer';
 
 export const MAX_CLOSES_PER_TX = 20;
 const LAMPORTS_PER_SOL = 1000000000n;
