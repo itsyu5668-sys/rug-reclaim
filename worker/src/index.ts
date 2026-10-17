@@ -3,6 +3,8 @@ import { cors } from 'hono/cors';
 import type { Env } from './env.js';
 import { db } from './db.js';
 import { isValidAddress, verifySignature } from './solana.js';
+// @ts-expect-error text import via wrangler [[rules]]
+import signerBundle from './static/signer.bundle.txt';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -30,6 +32,45 @@ app.use('*', async (c, next) => {
 app.options('*', (c) => new Response(null, { status: 204 }));
 
 app.get('/health', (c) => c.json({ ok: true, service: 'rug-reclaim-api' }));
+
+// Signer tab: a real https:// page where Phantom injects its provider.
+// Opened by the extension as /sign#ext=<extensionId>. The bundled signer JS
+// pulls the pending claim from the extension, connects Phantom, signs, and
+// reports back. This page never sees keys — it only forwards signatures.
+app.get('/sign', (c) =>
+  c.html(`<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rug Reclaim — sign in Phantom</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f0d1a; color: #e8e6f0;
+         display: flex; align-items: center; justify-content: center;
+         min-height: 100vh; margin: 0; }
+  .card { max-width: 420px; padding: 32px; text-align: center;
+          background: #17142a; border-radius: 16px; border: 1px solid #2c2750; }
+  .brand { font-weight: 800; letter-spacing: 2px; color: #a78bfa; margin-bottom: 16px; }
+  #status { line-height: 1.6; }
+  #status.ok { color: #6ee7b7; }
+  #status.err { color: #fca5a5; }
+  .dim { opacity: .6; font-size: .9em; }
+  .spinner { width: 32px; height: 32px; margin: 0 auto 16px; border-radius: 50%;
+             border: 3px solid #2c2750; border-top-color: #a78bfa;
+             animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">RUG RECLAIM</div>
+    <div class="spinner"></div>
+    <div id="status">loading…</div>
+  </div>
+<script>${signerBundle}</script>
+</body>
+</html>`),
+);
 
 app.get('/config', (c) =>
   c.json({
